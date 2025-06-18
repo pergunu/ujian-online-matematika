@@ -572,7 +572,7 @@
                 padding: 0 !important;
                 box-shadow: none !important;
                 border-radius: 0 !important;
-                background-image: url('https://raw.githubusercontent.com/pergunu/ujian-online/main/assets/images/certificate.png') !important;
+                background-image: url('https://raw.githubusercontent.com/pergunu/ujian-online-matematika/main/assets/images/certificate.png') !important;
                 background-size: cover !important;
                 background-position: center !important;
                 background-repeat: no-repeat !important;
@@ -1107,7 +1107,7 @@
         <!-- Welcome Screen -->
         <div id="welcome-screen" class="card slide-in">
             <div class="header">
-                <img src="https://raw.githubusercontent.com/pergunu/ujian-online/main/assets/images/logo.png" alt="PERGUNU Logo" class="logo">
+                <img src="https://raw.githubusercontent.com/pergunu/ujian-online-matematika/main/assets/images/logo.png" alt="PERGUNU Logo" class="logo">
                 <h1>Ujian Online PERGUNU Situbondo</h1>
             </div>
             
@@ -1224,8 +1224,8 @@
                         <input type="radio" id="subject-science" name="subject" value="Matematika" class="radio-option">
                         <label for="subject-science" class="radio-label">Matematika</label>
                         
-                        <input type="radio" id="subject-social" name="subject" value="akademik" class="radio-option">
-                        <label for="subject-social" class="radio-label">akademik</label>
+                        <input type="radio" id="subject-social" name="subject" value="Akademik" class="radio-option">
+                        <label for="subject-social" class="radio-label">Akademik</label>
                     </div>
                 </div>
             </div>
@@ -1762,11 +1762,11 @@
     </div>
 
     <!-- Audio Elements -->
-    <audio id="button-sound" src="https://github.com/pergunu/pergunusmart/raw/main/assets/audio/audiotombol.mp3" preload="auto"></audio>
-    <audio id="correct-answer-sound" src="https://github.com/pergunu/pergunusmart/raw/main/assets/audio/jawabanbenar.mp3" preload="auto"></audio>
-    <audio id="wrong-answer-sound" src="https://github.com/pergunu/pergunusmart/raw/main/assets/audio/jawabansalah.mp3" preload="auto"></audio>
-    <audio id="certificate-sound" src="https://github.com/pergunu/pergunusmart/raw/main/assets/audio/applause.mp3" preload="auto"></audio>
-    <audio id="opening-sound" src="https://github.com/pergunu/ujian-online/raw/main/assets/audio/opening.mp3" preload="auto"></audio>
+    <audio id="button-sound" src="https://github.com/pergunu/ujian-online-matematika/raw/main/assets/audio/audiotombol.mp3" preload="auto"></audio>
+    <audio id="correct-answer-sound" src="https://github.com/pergunu/ujian-online-matematika/raw/main/assets/audio/jawabanbenar.mp3" preload="auto"></audio>
+    <audio id="wrong-answer-sound" src="https://github.com/pergunu/ujian-online-matematika/raw/main/assets/audio/jawabansalah.mp3" preload="auto"></audio>
+    <audio id="certificate-sound" src="https://github.com/pergunu/ujian-online-matematika/raw/main/assets/audio/applause.mp3" preload="auto"></audio>
+    <audio id="opening-sound" src="https://github.com/pergunu/ujian-online-matematika/raw/main/assets/audio/opening.mp3" preload="auto"></audio>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
@@ -2659,7 +2659,7 @@ localStorage.setItem('questionBank', JSON.stringify(QUESTION_BANK));
                 questions = QUESTION_BANK[participantData.level][participantData.subject];
             } else {
                 // Default questions if subject not found
-                questions = QUESTION_BANK['SD']['IPA'];
+                questions = QUESTION_BANK['SD']['Matematika'];
             }
             
             // Randomize questions if setting is enabled
