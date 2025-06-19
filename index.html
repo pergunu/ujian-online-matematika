@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ujian Online PERGUNU Situbondo</title>
+    <title>Ujian Online Matematika PERGUNU Situbondo</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
@@ -935,11 +935,11 @@
         <div id="welcome-screen" class="card slide-in">
             <div class="header">
                 <img src="https://raw.githubusercontent.com/pergunu/ujian-online/main/assets/images/logo.png" alt="PERGUNU Logo" class="logo">
-                <h1>Ujian Online PERGUNU Situbondo</h1>
+                <h1>Ujian Online Matematika PERGUNU Situbondo</h1>
             </div>
             
             <div id="greeting-message">
-                <p id="greeting-text">Selamat datang di sistem ujian online PERGUNU Situbondo, Sistem tes kemampuan akademik untuk pelajar. Silakan masukkan kode login untuk melanjutkan.</p>
+                <p id="greeting-text">Selamat datang di sistem ujian online Matematika PERGUNU Situbondo, Sistem tes kemampuan matematika untuk pelajar. Silakan masukkan kode login untuk melanjutkan.</p>
             </div>
             
             <div class="form-group">
@@ -1048,8 +1048,8 @@
                 <div class="form-group">
                     <label class="form-label">Pilih Jenis Ujian</label>
                     <div class="radio-group">
-                        <input type="radio" id="subject-science" name="subject" value="IPA" class="radio-option" checked>
-                        <label for="subject-science" class="radio-label">IPA</label>
+                        <input type="radio" id="subject-math" name="subject" value="Matematika" class="radio-option" checked>
+                        <label for="subject-math" class="radio-label">Matematika</label>
                     </div>
                 </div>
             </div>
@@ -1198,7 +1198,7 @@
                         <h5>Pengaturan Konten</h5>
                         <div class="form-group">
                             <label class="form-label">Pesan Pembuka</label>
-                            <textarea id="greeting-message-input" class="form-control" rows="3" style="color: #333;">Selamat datang di sistem ujian online PERGUNU Situbondo. Silakan masukkan kode login untuk melanjutkan.</textarea>
+                            <textarea id="greeting-message-input" class="form-control" rows="3" style="color: #333;">Selamat datang di sistem ujian online Matematika PERGUNU Situbondo. Silakan masukkan kode login untuk melanjutkan.</textarea>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Pesan Informasi Berkala</label>
@@ -1270,13 +1270,13 @@
                     <div class="admin-section">
                         <h5>Aktifkan/Nonaktifkan Ujian</h5>
                         <div class="admin-control-group">
-                            <label class="admin-control-label">IPA</label>
+                            <label class="admin-control-label">Matematika</label>
                             <div class="admin-toggle">
                                 <label class="toggle-switch">
-                                    <input type="checkbox" id="toggle-science" checked>
+                                    <input type="checkbox" id="toggle-math" checked>
                                     <span class="toggle-slider"></span>
                                 </label>
-                                <span id="science-status">Aktif</span>
+                                <span id="math-status">Aktif</span>
                             </div>
                         </div>
                         <button id="save-settings-btn" class="btn btn-success">Simpan Pengaturan</button>
@@ -1355,7 +1355,7 @@
             <div class="form-group">
                 <label class="form-label">Mata Ujian</label>
                 <select id="edit-subject" class="form-control" style="color: #333;">
-                    <option value="IPA">IPA</option>
+                    <option value="Matematika">Matematika</option>
                 </select>
             </div>
             
@@ -1421,97 +1421,205 @@
             examDuration: 120,
             questionCount: 20,
             randomizeQuestions: true,
-            greetingMessage: "Selamat datang di sistem ujian online PERGUNU Situbondo. Silakan masukkan kode login untuk melanjutkan.",
+            greetingMessage: "Selamat datang di sistem ujian online Matematika PERGUNU Situbondo. Silakan masukkan kode login untuk melanjutkan.",
             adminMessage: "Tidak ada informasi terbaru saat ini.",
             chairmanName: "Moh. Nuril Hudha, S.Pd., M.Si.",
             enabledSubjects: {
-                IPA: true
+                Matematika: true
             }
         };
 
-        // Question bank structure with levels (IPA only)
+        // Question bank structure with levels (Mathematics only)
         let QUESTION_BANK = {
             'SD': {
-                'IPA': [
+                'Matematika': [
                     {
-                        question: "Perhatikan pernyataan berikut tentang ciri-ciri makhluk hidup: 1) Bernapas, 2) Tumbuh, 3) Bergerak, 4) Berkembang biak. Manakah yang merupakan ciri utama yang membedakan makhluk hidup dengan benda mati?",
+                        question: "Hasil dari 125 + 75 - 50 adalah...",
                         options: [
-                            "A. Hanya 1 dan 2",
-                            "B. Hanya 3 dan 4",
-                            "C. Hanya 1, 2, dan 3",
-                            "D. Semua benar (1, 2, 3, dan 4)",
-                            "E. Hanya 4 saja"
+                            "A. 150",
+                            "B. 175",
+                            "C. 200",
+                            "D. 225",
+                            "E. 250"
                         ],
-                        correctAnswer: 3,
-                        explanation: "Semua pernyataan (bernapas, tumbuh, bergerak, dan berkembang biak) adalah ciri-ciri makhluk hidup yang membedakannya dari benda mati. Benda mati tidak memiliki kemampuan untuk melakukan keempat hal tersebut secara alami."
+                        correctAnswer: 0,
+                        explanation: "Penyelesaian: 125 + 75 = 200; 200 - 50 = 150. Jadi jawaban yang benar adalah A. 150"
                     },
                     {
-                        question: "Pada proses fotosintesis, tumbuhan hijau mengubah karbon dioksida dan air menjadi glukosa dan oksigen dengan bantuan cahaya matahari. Manakah organel sel yang bertanggung jawab atas proses ini?",
+                        question: "Jika sebuah persegi memiliki panjang sisi 8 cm, maka keliling persegi tersebut adalah...",
                         options: [
-                            "A. Mitokondria",
-                            "B. Kloroplas",
-                            "C. Nukleus",
-                            "D. Ribosom",
-                            "E. Vakuola"
+                            "A. 16 cm",
+                            "B. 24 cm",
+                            "C. 32 cm",
+                            "D. 40 cm",
+                            "E. 64 cm"
                         ],
-                        correctAnswer: 1,
-                        explanation: "Kloroplas adalah organel sel tumbuhan yang mengandung klorofil, pigmen hijau yang menyerap energi cahaya untuk digunakan dalam proses fotosintesis. Mitokondria berperan dalam respirasi sel, bukan fotosintesis."
+                        correctAnswer: 2,
+                        explanation: "Keliling persegi = 4 × sisi = 4 × 8 cm = 32 cm. Jadi jawaban yang benar adalah C. 32 cm"
+                    },
+                    {
+                        question: "Hasil dari 3/4 + 1/2 adalah...",
+                        options: [
+                            "A. 1/4",
+                            "B. 1/2",
+                            "C. 3/4",
+                            "D. 1 1/4",
+                            "E. 1 1/2"
+                        ],
+                        correctAnswer: 3,
+                        explanation: "Penyelesaian: 3/4 + 1/2 = 3/4 + 2/4 = 5/4 = 1 1/4. Jadi jawaban yang benar adalah D. 1 1/4"
+                    },
+                    {
+                        question: "Sebuah toko memiliki 120 buah apel. Jika 3/8 bagian dari apel tersebut sudah terjual, berapa banyak apel yang masih tersisa?",
+                        options: [
+                            "A. 45",
+                            "B. 60",
+                            "C. 75",
+                            "D. 90",
+                            "E. 105"
+                        ],
+                        correctAnswer: 2,
+                        explanation: "Apel yang terjual = 3/8 × 120 = 45. Apel yang tersisa = 120 - 45 = 75. Jadi jawaban yang benar adalah C. 75"
+                    },
+                    {
+                        question: "Hasil dari 0,75 × 12 adalah...",
+                        options: [
+                            "A. 6",
+                            "B. 7,5",
+                            "C. 9",
+                            "D. 10,5",
+                            "E. 12"
+                        ],
+                        correctAnswer: 2,
+                        explanation: "0,75 × 12 = 9. Jadi jawaban yang benar adalah C. 9"
                     }
                 ]
             },
             'SMP': {
-                'IPA': [
+                'Matematika': [
                     {
-                        question: "Perhatikan gambar sel tumbuhan! Organel sel yang berfungsi sebagai tempat berlangsungnya fotosintesis dan hanya dimiliki oleh sel tumbuhan adalah...",
+                        question: "Penyelesaian dari persamaan 2x - 5 = 11 adalah...",
                         options: [
-                            "A. Mitokondria",
-                            "B. Kloroplas",
-                            "C. Nukleus",
-                            "D. Ribosom",
-                            "E. Badan Golgi"
+                            "A. x = 3",
+                            "B. x = 6",
+                            "C. x = 8",
+                            "D. x = 10",
+                            "E. x = 12"
                         ],
-                        correctAnswer: 1,
-                        explanation: "Kloroplas adalah organel sel tumbuhan yang mengandung klorofil, pigmen hijau yang menangkap energi cahaya untuk fotosintesis. Proses ini mengubah karbon dioksida dan air menjadi glukosa dan oksigen. Kloroplas tidak dimiliki oleh sel hewan."
+                        correctAnswer: 2,
+                        explanation: "Penyelesaian: 2x - 5 = 11 → 2x = 11 + 5 → 2x = 16 → x = 8. Jadi jawaban yang benar adalah C. x = 8"
                     },
                     {
-                        question: "Perhatikan tabel perubahan materi berikut:\n1) Besi berkarat\n2) Es mencair\n3) Kayu terbakar\n4) Gula larut dalam air\nManakah yang termasuk perubahan kimia?",
+                        question: "Jika f(x) = 3x² - 2x + 5, maka nilai f(-1) adalah...",
                         options: [
-                            "A. 1 dan 2",
-                            "B. 1 dan 3",
-                            "C. 2 dan 3",
-                            "D. 2 dan 4",
-                            "E. 3 dan 4"
+                            "A. 0",
+                            "B. 4",
+                            "C. 6",
+                            "D. 10",
+                            "E. 12"
+                        ],
+                        correctAnswer: 3,
+                        explanation: "f(-1) = 3(-1)² - 2(-1) + 5 = 3(1) + 2 + 5 = 3 + 2 + 5 = 10. Jadi jawaban yang benar adalah D. 10"
+                    },
+                    {
+                        question: "Dalam sebuah kelas terdapat 30 siswa. Jika 12 siswa di antaranya adalah perempuan, maka perbandingan jumlah siswa laki-laki terhadap perempuan adalah...",
+                        options: [
+                            "A. 2:3",
+                            "B. 3:2",
+                            "C. 3:5",
+                            "D. 5:3",
+                            "E. 5:2"
                         ],
                         correctAnswer: 1,
-                        explanation: "Perubahan kimia ditandai dengan terbentuknya zat baru yang sifatnya berbeda dari zat semula. Besi berkarat (menjadi besi oksida) dan kayu terbakar (menjadi arang/karbon) adalah perubahan kimia. Es mencair dan gula larut adalah perubahan fisika karena tidak menghasilkan zat baru."
+                        explanation: "Jumlah laki-laki = 30 - 12 = 18. Perbandingan laki-laki:perempuan = 18:12 = 3:2. Jadi jawaban yang benar adalah B. 3:2"
+                    },
+                    {
+                        question: "Sebuah lingkaran memiliki diameter 14 cm. Luas lingkaran tersebut adalah... (π = 22/7)",
+                        options: [
+                            "A. 44 cm²",
+                            "B. 77 cm²",
+                            "C. 154 cm²",
+                            "D. 308 cm²",
+                            "E. 616 cm²"
+                        ],
+                        correctAnswer: 2,
+                        explanation: "Jari-jari (r) = diameter/2 = 14/2 = 7 cm. Luas = πr² = 22/7 × 7 × 7 = 154 cm². Jadi jawaban yang benar adalah C. 154 cm²"
+                    },
+                    {
+                        question: "Nilai dari √144 + √64 adalah...",
+                        options: [
+                            "A. 12",
+                            "B. 14",
+                            "C. 16",
+                            "D. 18",
+                            "E. 20"
+                        ],
+                        correctAnswer: 4,
+                        explanation: "√144 = 12 dan √64 = 8. Jadi 12 + 8 = 20. Jawaban yang benar adalah E. 20"
                     }
                 ]
             },
             'SMA/SMK': {
-                'IPA': [
+                'Matematika': [
                     {
-                        question: "Perhatikan reaksi kimia berikut: C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + Energi. Reaksi ini terjadi di organel sel yang memiliki ciri-ciri: 1) Memiliki membran dalam yang berlipat-lipat (krista), 2) Mengandung enzim untuk siklus Krebs, 3) Dikenal sebagai 'powerhouse of the cell'. Organel yang dimaksud adalah...",
+                        question: "Turunan pertama dari fungsi f(x) = 3x³ - 2x² + 5x - 1 adalah...",
                         options: [
-                            "A. Nukleus",
-                            "B. Ribosom",
-                            "C. Lisosom",
-                            "D. Mitokondria",
-                            "E. Retikulum Endoplasma"
+                            "A. 9x² - 4x + 5",
+                            "B. 9x² - 4x - 1",
+                            "C. 9x² + 4x + 5",
+                            "D. 6x² - 4x + 5",
+                            "E. 6x² + 4x - 1"
                         ],
-                        correctAnswer: 3,
-                        explanation: "Reaksi tersebut adalah respirasi aerob yang terjadi di mitokondria. Mitokondria memiliki membran dalam berlipat (krista) yang memperluas permukaan untuk reaksi rantai transpor elektron. Matriks mitokondria mengandung enzim untuk siklus Krebs dan disebut 'powerhouse' karena menghasilkan ATP."
+                        correctAnswer: 0,
+                        explanation: "Turunan dari f(x) = 3x³ - 2x² + 5x - 1 adalah f'(x) = 9x² - 4x + 5. Jadi jawaban yang benar adalah A. 9x² - 4x + 5"
                     },
                     {
-                        question: "Perhatikan grafik hubungan antara suhu dengan kelarutan beberapa garam! Berdasarkan grafik, kelarutan garam KNO₃ yang paling tepat dinyatakan dalam persamaan...",
+                        question: "Jika log 2 = 0,301 dan log 3 = 0,477, maka nilai dari log 18 adalah...",
                         options: [
-                            "A. Kelarutan tidak dipengaruhi suhu",
-                            "B. Kelarutan berkurang seiring kenaikan suhu",
-                            "C. Kelarutan bertambah secara linear dengan suhu",
-                            "D. Kelarutan bertambah secara eksponensial dengan suhu",
-                            "E. Kelarutan bertambah seiring kenaikan suhu tetapi tidak linear"
+                            "A. 1,255",
+                            "B. 1,301",
+                            "C. 1,477",
+                            "D. 1,556",
+                            "E. 1,778"
                         ],
-                        correctAnswer: 4,
-                        explanation: "Kelarutan KNO₃ meningkat dengan kenaikan suhu tetapi tidak linear. Pada suhu rendah, kenaikan kelarutan relatif kecil, sedangkan pada suhu tinggi, kenaikan kelarutan lebih signifikan. Ini karena proses pelarutan KNO₃ bersifat endoterm (menyerap panas)."
+                        correctAnswer: 0,
+                        explanation: "log 18 = log (2 × 3 × 3) = log 2 + log 3 + log 3 = 0,301 + 0,477 + 0,477 = 1,255. Jadi jawaban yang benar adalah A. 1,255"
+                    },
+                    {
+                        question: "Diketahui barisan aritmatika dengan suku pertama 5 dan beda 3. Suku ke-10 dari barisan tersebut adalah...",
+                        options: [
+                            "A. 23",
+                            "B. 26",
+                            "C. 29",
+                            "D. 32",
+                            "E. 35"
+                        ],
+                        correctAnswer: 3,
+                        explanation: "Rumus suku ke-n barisan aritmatika: Un = a + (n-1)b. U10 = 5 + (10-1)3 = 5 + 27 = 32. Jadi jawaban yang benar adalah D. 32"
+                    },
+                    {
+                        question: "Nilai dari lim (x→2) (x² - 4)/(x - 2) adalah...",
+                        options: [
+                            "A. 0",
+                            "B. 2",
+                            "C. 4",
+                            "D. 6",
+                            "E. 8"
+                        ],
+                        correctAnswer: 2,
+                        explanation: "Faktorkan pembilang: (x² - 4) = (x-2)(x+2). Maka lim (x→2) (x-2)(x+2)/(x-2) = lim (x→2) (x+2) = 4. Jadi jawaban yang benar adalah C. 4"
+                    },
+                    {
+                        question: "Jika sin θ = 3/5 dan θ sudut lancip, maka nilai dari cos θ adalah...",
+                        options: [
+                            "A. 1/5",
+                            "B. 2/5",
+                            "C. 3/5",
+                            "D. 4/5",
+                            "E. 5/5"
+                        ],
+                        correctAnswer: 3,
+                        explanation: "Gunakan identitas sin²θ + cos²θ = 1 → (3/5)² + cos²θ = 1 → 9/25 + cos²θ = 1 → cos²θ = 16/25 → cosθ = 4/5 (karena θ lancip, cosθ positif). Jadi jawaban yang benar adalah D. 4/5"
                     }
                 ]
             }
@@ -1519,12 +1627,12 @@
 
         // Motivational messages based on score
         const MOTIVATIONAL_MESSAGES = {
-            '90-100': 'Sempurna! Anda sangat luar biasa dalam menguasai materi ini. Pertahankan prestasi ini.',
-            '80-89': 'Hasil yang sangat baik! Anda telah menunjukkan pemahaman yang mendalam tentang materi.',
-            '70-79': 'Kerja bagus! Anda memiliki pemahaman yang baik tentang materi ini.',
+            '90-100': 'Sempurna! Anda sangat luar biasa dalam menguasai materi matematika. Pertahankan prestasi ini.',
+            '80-89': 'Hasil yang sangat baik! Anda telah menunjukkan pemahaman yang mendalam tentang matematika.',
+            '70-79': 'Kerja bagus! Anda memiliki pemahaman yang baik tentang konsep matematika.',
             '60-69': 'Hasil yang cukup baik. Tingkatkan lagi pemahaman Anda untuk hasil yang lebih baik.',
-            '50-59': 'Anda sudah memahami dasar-dasarnya. Terus berlatih untuk meningkatkan pemahaman.',
-            '0-49': 'Jangan menyerah! Gunakan hasil ini sebagai motivasi untuk belajar lebih giat lagi.'
+            '50-59': 'Anda sudah memahami dasar-dasarnya. Terus berlatih untuk meningkatkan pemahaman matematika.',
+            '0-49': 'Jangan menyerah! Gunakan hasil ini sebagai motivasi untuk belajar matematika lebih giat lagi.'
         };
         
         // Initialize the application
@@ -1847,8 +1955,8 @@
             document.getElementById('chairman-name').value = adminSettings.chairmanName;
             
             // Load subject toggle
-            document.getElementById('toggle-science').checked = adminSettings.enabledSubjects.IPA;
-            document.getElementById('science-status').textContent = adminSettings.enabledSubjects.IPA ? 'Aktif' : 'Nonaktif';
+            document.getElementById('toggle-math').checked = adminSettings.enabledSubjects.Matematika;
+            document.getElementById('math-status').textContent = adminSettings.enabledSubjects.Matematika ? 'Aktif' : 'Nonaktif';
         }
         
         function saveParticipantsData() {
@@ -2008,12 +2116,12 @@
                 examDate: new Date().toISOString()
             };
             
-            // Load questions based on level - hanya IPA
-            if (participantData.level && QUESTION_BANK[participantData.level]['IPA']) {
-                questions = QUESTION_BANK[participantData.level]['IPA'];
+            // Load questions based on level - hanya Matematika
+            if (participantData.level && QUESTION_BANK[participantData.level]['Matematika']) {
+                questions = QUESTION_BANK[participantData.level]['Matematika'];
             } else {
                 // Default questions
-                questions = QUESTION_BANK['SD']['IPA'];
+                questions = QUESTION_BANK['SD']['Matematika'];
             }
             
             // Randomize questions if setting is enabled
@@ -2337,10 +2445,10 @@
                     <h2 class="certificate-recipient">${formatName(participantData.fullname)}</h2>
                     <p class="certificate-body">
                         Atas Partisipasi & Pencapaian Luar Biasa Dalam<br>
-                        Ujian Pergunu Situbondo
+                        Ujian Matematika Pergunu Situbondo
                     </p>
                     <p class="certificate-body">
-                        Sebagai penghargaan atas dedikasi dalam memahami materi ujian dan mengasah logika, 
+                        Sebagai penghargaan atas dedikasi dalam memahami materi matematika dan mengasah logika, 
                         sertifikat ini diberikan sebagai motivasi untuk terus berkembang.
                     </p>
                     <div class="certificate-score">Nilai: ${score}%</div>
@@ -2832,7 +2940,7 @@
             
             // Update subject toggle
             adminSettings.enabledSubjects = {
-                IPA: document.getElementById('toggle-science').checked
+                Matematika: document.getElementById('toggle-math').checked
             };
             
             // Save to localStorage
