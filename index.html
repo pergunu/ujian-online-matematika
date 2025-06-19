@@ -791,71 +791,6 @@
             flex-wrap: wrap;
         }
 
-        /* Question Bank Styles */
-        .questions-list {
-            max-height: 300px;
-            overflow-y: auto;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 10px;
-        }
-
-        .question-item {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            font-size: 14px;
-            position: relative;
-        }
-
-        .question-item:last-child {
-            border-bottom: none;
-        }
-
-        .question-actions {
-            position: absolute;
-            right: 10px;
-            top: 10px;
-            display: flex;
-            gap: 5px;
-        }
-
-        .question-action-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            padding: 2px 5px;
-            border-radius: 3px;
-        }
-
-        .edit-btn {
-            color: var(--color-info);
-        }
-
-        .delete-btn {
-            color: var(--color-error);
-        }
-
-        .options-container {
-            display: grid;
-            gap: 5px;
-        }
-
-        /* Loading Indicator */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(0,0,0,.3);
-            border-radius: 50%;
-            border-top-color: var(--color-primary);
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         /* Table Styles */
         .data-table {
             width: 100%;
@@ -908,41 +843,6 @@
             border-radius: 8px;
             border: 1px solid #ddd;
             font-size: 14px;
-        }
-
-        /* Edit Question Modal */
-        .edit-question-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .edit-question-content {
-            background: white;
-            color: #333;
-            border-radius: 15px;
-            padding: 30px;
-            width: 90%;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .edit-question-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
         }
 
         /* Edit Participant Modal */
@@ -1005,54 +905,6 @@
             color: #a94442;
         }
 
-        /* Question Image Preview */
-        .question-image-preview {
-            max-width: 100%;
-            max-height: 200px;
-            margin-top: 10px;
-            display: none;
-        }
-
-        /* File Input Customization */
-        .file-input-container {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .file-input-button {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 10px 15px;
-            background-color: #f5f5f5;
-            color: #333;
-            cursor: pointer;
-            display: block;
-            text-align: center;
-            transition: all 0.3s;
-        }
-
-        .file-input-button:hover {
-            background-color: #e9e9e9;
-        }
-
-        .file-input {
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-        }
-
-        .file-input-info {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
-
         /* Alert Styles */
         .alert {
             padding: 15px;
@@ -1071,31 +923,6 @@
             background-color: #f2dede;
             color: #a94442;
             border: 1px solid #ebccd1;
-        }
-
-        /* Question Level Badge */
-        .level-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-right: 5px;
-        }
-
-        .level-sd {
-            background-color: #f0ad4e;
-            color: white;
-        }
-
-        .level-smp {
-            background-color: #5bc0de;
-            color: white;
-        }
-
-        .level-sma {
-            background-color: #5cb85c;
-            color: white;
         }
     </style>
 </head>
@@ -1221,11 +1048,8 @@
                 <div class="form-group">
                     <label class="form-label">Pilih Jenis Ujian</label>
                     <div class="radio-group">
-                        <input type="radio" id="subject-science" name="subject" value="IPA" class="radio-option">
+                        <input type="radio" id="subject-science" name="subject" value="IPA" class="radio-option" checked>
                         <label for="subject-science" class="radio-label">IPA</label>
-                        
-                        <input type="radio" id="subject-social" name="subject" value="IPS" class="radio-option">
-                        <label for="subject-social" class="radio-label">IPS</label>
                     </div>
                 </div>
             </div>
@@ -1300,125 +1124,10 @@
             <span class="tooltip">Chat Admin</span>
         </button>
         
-        <button class="floating-btn" id="question-bank-btn">
-            <i class="fas fa-book"></i>
-            <span class="tooltip">Bank Soal</span>
-        </button>
-        
         <button class="floating-btn" id="admin-panel-btn">
             <i class="fas fa-cog"></i>
             <span class="tooltip">Admin Panel</span>
         </button>
-    </div>
-    
-    <!-- Modals -->
-    <!-- Question Bank Modal -->
-    <div class="modal" id="question-bank-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Bank Soal</h3>
-                <button class="modal-close" id="close-question-bank-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="question-bank-code" class="form-label">Kode Bank Soal</label>
-                    <input type="password" id="question-bank-code" class="form-control" placeholder="Masukkan kode bank soal" style="color: #333;">
-                    <button id="submit-question-bank-code" class="btn">Masuk</button>
-                </div>
-                
-                <div id="question-bank-content" style="display: none;">
-                    <h4>Bank Soal</h4>
-                    <div class="admin-section">
-                        <h5>Tambah Soal Baru</h5>
-                        <div class="form-group">
-                            <label class="form-label">Tingkat Sekolah</label>
-                            <select id="question-level" class="form-control" style="color: #333;">
-                                <option value="SD">SD</option>
-                                <option value="SMP">SMP</option>
-                                <option value="SMA/SMK">SMA/SMK</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Kategori Ujian</label>
-                            <select id="question-category" class="form-control" style="color: #333;">
-                                <option value="IPA">IPA</option>
-                                <option value="IPS">IPS</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Pertanyaan</label>
-                            <textarea id="question-text-input" class="form-control" rows="3" style="color: #333;"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Gambar Soal (Opsional, maks. 500KB)</label>
-                            <div class="file-input-container">
-                                <label class="file-input-button">
-                                    <i class="fas fa-upload"></i> Pilih Gambar
-                                    <input type="file" id="question-image" class="file-input" accept="image/*">
-                                </label>
-                                <div class="file-input-info">Format: JPG, PNG, GIF. Maksimal 500KB</div>
-                            </div>
-                            <img id="question-image-preview" class="question-image-preview" src="#" alt="Preview Gambar Soal">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Opsi Jawaban</label>
-                            <div class="options-container">
-                                <input type="text" id="option-a" class="form-control" placeholder="Opsi A" style="color: #333; margin-bottom: 5px;">
-                                <input type="text" id="option-b" class="form-control" placeholder="Opsi B" style="color: #333; margin-bottom: 5px;">
-                                <input type="text" id="option-c" class="form-control" placeholder="Opsi C" style="color: #333; margin-bottom: 5px;">
-                                <input type="text" id="option-d" class="form-control" placeholder="Opsi D" style="color: #333; margin-bottom: 5px;">
-                                <input type="text" id="option-e" class="form-control" placeholder="Opsi E" style="color: #333;">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Jawaban Benar</label>
-                            <select id="correct-answer" class="form-control" style="color: #333;">
-                                <option value="0">A</option>
-                                <option value="1">B</option>
-                                <option value="2">C</option>
-                                <option value="3">D</option>
-                                <option value="4">E</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Penjelasan</label>
-                            <textarea id="explanation-input" class="form-control" rows="3" style="color: #333;"></textarea>
-                        </div>
-                        <button id="add-question-btn" class="btn btn-success">Tambah Soal</button>
-                        <div id="add-question-alert" class="alert" style="display: none;"></div>
-                    </div>
-                    
-                    <div class="admin-section">
-                        <h5>Daftar Soal</h5>
-                        <div class="form-group">
-                            <div class="admin-controls">
-                                <div class="admin-control-group">
-                                    <label class="admin-control-label">Filter Tingkat</label>
-                                    <select id="filter-level" class="admin-control-input" style="color: #333;">
-                                        <option value="all">Semua Tingkat</option>
-                                        <option value="SD">SD</option>
-                                        <option value="SMP">SMP</option>
-                                        <option value="SMA/SMK">SMA/SMK</option>
-                                    </select>
-                                </div>
-                                <div class="admin-control-group">
-                                    <label class="admin-control-label">Filter Kategori</label>
-                                    <select id="filter-category" class="admin-control-input" style="color: #333;">
-                                        <option value="all">Semua Kategori</option>
-                                        <option value="IPA">IPA</option>
-                                        <option value="IPS">IPS</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="questions-list">
-                            <!-- Questions will be loaded here -->
-                            <p id="no-questions-message">Belum ada soal yang tersedia.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
     
     <!-- Admin Panel Modal -->
@@ -1441,11 +1150,6 @@
                         <div class="form-group">
                             <label class="form-label">Kode Login Baru</label>
                             <input type="password" id="new-login-code" class="form-control" placeholder="Masukkan kode login baru" style="color: #333;">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Kode Bank Soal Baru</label>
-                            <input type="password" id="new-question-bank-code" class="form-control" placeholder="Masukkan kode bank soal baru" style="color: #333;">
                         </div>
                         
                         <div class="form-group">
@@ -1565,104 +1269,20 @@
                     
                     <div class="admin-section">
                         <h5>Aktifkan/Nonaktifkan Ujian</h5>
-                        <div class="admin-controls">
-                            <div class="admin-control-group">
-                                <label class="admin-control-label">IPA</label>
-                                <div class="admin-toggle">
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" id="toggle-science" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                    <span id="science-status">Aktif</span>
-                                </div>
-                            </div>
-                            <div class="admin-control-group">
-                                <label class="admin-control-label">IPS</label>
-                                <div class="admin-toggle">
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" id="toggle-social" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                    <span id="social-status">Aktif</span>
-                                </div>
+                        <div class="admin-control-group">
+                            <label class="admin-control-label">IPA</label>
+                            <div class="admin-toggle">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="toggle-science" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span id="science-status">Aktif</span>
                             </div>
                         </div>
                         <button id="save-settings-btn" class="btn btn-success">Simpan Pengaturan</button>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <!-- Edit Question Modal -->
-    <div class="edit-question-modal" id="edit-question-modal">
-        <div class="edit-question-content">
-            <span class="edit-question-close" id="close-edit-question-modal">&times;</span>
-            <h3>Edit Soal</h3>
-            
-            <div class="form-group">
-                <label class="form-label">Tingkat Sekolah</label>
-                <select id="edit-question-level" class="form-control" style="color: #333;">
-                    <option value="SD">SD</option>
-                    <option value="SMP">SMP</option>
-                    <option value="SMA/SMK">SMA/SMK</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Kategori Ujian</label>
-                <select id="edit-question-category" class="form-control" style="color: #333;">
-                    <option value="IPA">IPA</option>
-                    <option value="IPS">IPS</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Pertanyaan</label>
-                <textarea id="edit-question-text" class="form-control" rows="3" style="color: #333;"></textarea>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Gambar Soal (Opsional, maks. 500KB)</label>
-                <div class="file-input-container">
-                    <label class="file-input-button">
-                        <i class="fas fa-upload"></i> Pilih Gambar
-                        <input type="file" id="edit-question-image" class="file-input" accept="image/*">
-                    </label>
-                    <div class="file-input-info">Format: JPG, PNG, GIF. Maksimal 500KB</div>
-                </div>
-                <img id="edit-question-image-preview" class="question-image-preview" src="#" alt="Preview Gambar Soal">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Opsi Jawaban</label>
-                <div class="options-container">
-                    <input type="text" id="edit-option-a" class="form-control" placeholder="Opsi A" style="color: #333; margin-bottom: 5px;">
-                    <input type="text" id="edit-option-b" class="form-control" placeholder="Opsi B" style="color: #333; margin-bottom: 5px;">
-                    <input type="text" id="edit-option-c" class="form-control" placeholder="Opsi C" style="color: #333; margin-bottom: 5px;">
-                    <input type="text" id="edit-option-d" class="form-control" placeholder="Opsi D" style="color: #333; margin-bottom: 5px;">
-                    <input type="text" id="edit-option-e" class="form-control" placeholder="Opsi E" style="color: #333;">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Jawaban Benar</label>
-                <select id="edit-correct-answer" class="form-control" style="color: #333;">
-                    <option value="0">A</option>
-                    <option value="1">B</option>
-                    <option value="2">C</option>
-                    <option value="3">D</option>
-                    <option value="4">E</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Penjelasan</label>
-                <textarea id="edit-explanation" class="form-control" rows="3" style="color: #333;"></textarea>
-            </div>
-            
-            <div class="form-group" style="display: flex; justify-content: space-between;">
-                <button id="save-edit-question-btn" class="btn btn-success">Simpan Perubahan</button>
-                <button id="delete-question-btn" class="btn btn-danger">Hapus Soal</button>
-            </div>
-            
-            <input type="hidden" id="edit-question-index">
-            <input type="hidden" id="edit-question-original-level">
-            <input type="hidden" id="edit-question-original-category">
         </div>
     </div>
     
@@ -1736,7 +1356,6 @@
                 <label class="form-label">Mata Ujian</label>
                 <select id="edit-subject" class="form-control" style="color: #333;">
                     <option value="IPA">IPA</option>
-                    <option value="IPS">IPS</option>
                 </select>
             </div>
             
@@ -1790,7 +1409,6 @@
         
         // Default codes (should be changed in production)
         const DEFAULT_LOGIN_CODE = '12345';
-        const DEFAULT_QUESTION_BANK_CODE = 'OPENLOCK-1926';
         const DEFAULT_ADMIN_PANEL_CODE = '65614222';
         
         // Store participants data
@@ -1799,7 +1417,6 @@
         // Store admin settings
         let adminSettings = JSON.parse(localStorage.getItem('adminSettings')) || {
             loginCode: DEFAULT_LOGIN_CODE,
-            questionBankCode: DEFAULT_QUESTION_BANK_CODE,
             adminCode: DEFAULT_ADMIN_PANEL_CODE,
             examDuration: 120,
             questionCount: 20,
@@ -1808,383 +1425,98 @@
             adminMessage: "Tidak ada informasi terbaru saat ini.",
             chairmanName: "Moh. Nuril Hudha, S.Pd., M.Si.",
             enabledSubjects: {
-                IPA: true,
-                IPS: true
+                IPA: true
             }
         };
-        
-        // Question bank structure with levels
-        // Update the QUESTION_BANK variable in the existing code with this content
-let QUESTION_BANK = {
-    'SD': {
-        'IPA': [
-            {
-                question: "Perhatikan pernyataan berikut tentang ciri-ciri makhluk hidup: 1) Bernapas, 2) Tumbuh, 3) Bergerak, 4) Berkembang biak. Manakah yang merupakan ciri utama yang membedakan makhluk hidup dengan benda mati?",
-                options: [
-                    "A. Hanya 1 dan 2",
-                    "B. Hanya 3 dan 4",
-                    "C. Hanya 1, 2, dan 3",
-                    "D. Semua benar (1, 2, 3, dan 4)",
-                    "E. Hanya 4 saja"
-                ],
-                correctAnswer: 3,
-                explanation: "Semua pernyataan (bernapas, tumbuh, bergerak, dan berkembang biak) adalah ciri-ciri makhluk hidup yang membedakannya dari benda mati. Benda mati tidak memiliki kemampuan untuk melakukan keempat hal tersebut secara alami."
+
+        // Question bank structure with levels (IPA only)
+        let QUESTION_BANK = {
+            'SD': {
+                'IPA': [
+                    {
+                        question: "Perhatikan pernyataan berikut tentang ciri-ciri makhluk hidup: 1) Bernapas, 2) Tumbuh, 3) Bergerak, 4) Berkembang biak. Manakah yang merupakan ciri utama yang membedakan makhluk hidup dengan benda mati?",
+                        options: [
+                            "A. Hanya 1 dan 2",
+                            "B. Hanya 3 dan 4",
+                            "C. Hanya 1, 2, dan 3",
+                            "D. Semua benar (1, 2, 3, dan 4)",
+                            "E. Hanya 4 saja"
+                        ],
+                        correctAnswer: 3,
+                        explanation: "Semua pernyataan (bernapas, tumbuh, bergerak, dan berkembang biak) adalah ciri-ciri makhluk hidup yang membedakannya dari benda mati. Benda mati tidak memiliki kemampuan untuk melakukan keempat hal tersebut secara alami."
+                    },
+                    {
+                        question: "Pada proses fotosintesis, tumbuhan hijau mengubah karbon dioksida dan air menjadi glukosa dan oksigen dengan bantuan cahaya matahari. Manakah organel sel yang bertanggung jawab atas proses ini?",
+                        options: [
+                            "A. Mitokondria",
+                            "B. Kloroplas",
+                            "C. Nukleus",
+                            "D. Ribosom",
+                            "E. Vakuola"
+                        ],
+                        correctAnswer: 1,
+                        explanation: "Kloroplas adalah organel sel tumbuhan yang mengandung klorofil, pigmen hijau yang menyerap energi cahaya untuk digunakan dalam proses fotosintesis. Mitokondria berperan dalam respirasi sel, bukan fotosintesis."
+                    }
+                ]
             },
-            {
-                question: "Pada proses fotosintesis, tumbuhan hijau mengubah karbon dioksida dan air menjadi glukosa dan oksigen dengan bantuan cahaya matahari. Manakah organel sel yang bertanggung jawab atas proses ini?",
-                options: [
-                    "A. Mitokondria",
-                    "B. Kloroplas",
-                    "C. Nukleus",
-                    "D. Ribosom",
-                    "E. Vakuola"
-                ],
-                correctAnswer: 1,
-                explanation: "Kloroplas adalah organel sel tumbuhan yang mengandung klorofil, pigmen hijau yang menyerap energi cahaya untuk digunakan dalam proses fotosintesis. Mitokondria berperan dalam respirasi sel, bukan fotosintesis."
+            'SMP': {
+                'IPA': [
+                    {
+                        question: "Perhatikan gambar sel tumbuhan! Organel sel yang berfungsi sebagai tempat berlangsungnya fotosintesis dan hanya dimiliki oleh sel tumbuhan adalah...",
+                        options: [
+                            "A. Mitokondria",
+                            "B. Kloroplas",
+                            "C. Nukleus",
+                            "D. Ribosom",
+                            "E. Badan Golgi"
+                        ],
+                        correctAnswer: 1,
+                        explanation: "Kloroplas adalah organel sel tumbuhan yang mengandung klorofil, pigmen hijau yang menangkap energi cahaya untuk fotosintesis. Proses ini mengubah karbon dioksida dan air menjadi glukosa dan oksigen. Kloroplas tidak dimiliki oleh sel hewan."
+                    },
+                    {
+                        question: "Perhatikan tabel perubahan materi berikut:\n1) Besi berkarat\n2) Es mencair\n3) Kayu terbakar\n4) Gula larut dalam air\nManakah yang termasuk perubahan kimia?",
+                        options: [
+                            "A. 1 dan 2",
+                            "B. 1 dan 3",
+                            "C. 2 dan 3",
+                            "D. 2 dan 4",
+                            "E. 3 dan 4"
+                        ],
+                        correctAnswer: 1,
+                        explanation: "Perubahan kimia ditandai dengan terbentuknya zat baru yang sifatnya berbeda dari zat semula. Besi berkarat (menjadi besi oksida) dan kayu terbakar (menjadi arang/karbon) adalah perubahan kimia. Es mencair dan gula larut adalah perubahan fisika karena tidak menghasilkan zat baru."
+                    }
+                ]
+            },
+            'SMA/SMK': {
+                'IPA': [
+                    {
+                        question: "Perhatikan reaksi kimia berikut: C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + Energi. Reaksi ini terjadi di organel sel yang memiliki ciri-ciri: 1) Memiliki membran dalam yang berlipat-lipat (krista), 2) Mengandung enzim untuk siklus Krebs, 3) Dikenal sebagai 'powerhouse of the cell'. Organel yang dimaksud adalah...",
+                        options: [
+                            "A. Nukleus",
+                            "B. Ribosom",
+                            "C. Lisosom",
+                            "D. Mitokondria",
+                            "E. Retikulum Endoplasma"
+                        ],
+                        correctAnswer: 3,
+                        explanation: "Reaksi tersebut adalah respirasi aerob yang terjadi di mitokondria. Mitokondria memiliki membran dalam berlipat (krista) yang memperluas permukaan untuk reaksi rantai transpor elektron. Matriks mitokondria mengandung enzim untuk siklus Krebs dan disebut 'powerhouse' karena menghasilkan ATP."
+                    },
+                    {
+                        question: "Perhatikan grafik hubungan antara suhu dengan kelarutan beberapa garam! Berdasarkan grafik, kelarutan garam KNO₃ yang paling tepat dinyatakan dalam persamaan...",
+                        options: [
+                            "A. Kelarutan tidak dipengaruhi suhu",
+                            "B. Kelarutan berkurang seiring kenaikan suhu",
+                            "C. Kelarutan bertambah secara linear dengan suhu",
+                            "D. Kelarutan bertambah secara eksponensial dengan suhu",
+                            "E. Kelarutan bertambah seiring kenaikan suhu tetapi tidak linear"
+                        ],
+                        correctAnswer: 4,
+                        explanation: "Kelarutan KNO₃ meningkat dengan kenaikan suhu tetapi tidak linear. Pada suhu rendah, kenaikan kelarutan relatif kecil, sedangkan pada suhu tinggi, kenaikan kelarutan lebih signifikan. Ini karena proses pelarutan KNO₃ bersifat endoterm (menyerap panas)."
+                    }
+                ]
             }
-                    ],
-        'IPS': [
-            {
-                question: "Perhatikan peta provinsi di Indonesia! Provinsi yang terletak paling timur dan berbatasan langsung dengan Papua Nugini adalah...",
-                options: [
-                    "A. Papua Barat",
-                    "B. Maluku",
-                    "C. Nusa Tenggara Timur",
-                    "D. Papua",
-                    "E. Kalimantan Utara"
-                ],
-                correctAnswer: 3,
-                explanation: "Provinsi Papua merupakan provinsi paling timur di Indonesia yang berbatasan langsung dengan negara Papua Nugini. Batas darat Indonesia-Papua Nugini sepanjang 820 km membentang dari pantai utara hingga pantai selatan Pulau Papua."
-            },
-            {
-                question: "Perhatikan gambar candi berikut yang memiliki ciri khas stupa dan termasuk warisan dunia UNESCO! Candi yang dimaksud adalah...",
-                options: [
-                    "A. Candi Prambanan",
-                    "B. Candi Borobudur",
-                    "C. Candi Mendut",
-                    "D. Candi Sewu",
-                    "E. Candi Kalasan"
-                ],
-                correctAnswer: 1,
-                explanation: "Candi Borobudur adalah candi Buddha terbesar di dunia yang dibangun pada abad ke-9 pada masa pemerintahan wangsa Syailendra. Candi ini terkenal dengan stupa-stupanya dan menjadi salah satu warisan dunia UNESCO sejak 1991."
-            }
-        ]
-    },
-    'SMP': {
-        'IPA': [
-            {
-                question: "Perhatikan gambar sel tumbuhan! Organel sel yang berfungsi sebagai tempat berlangsungnya fotosintesis dan hanya dimiliki oleh sel tumbuhan adalah...",
-                options: [
-                    "A. Mitokondria",
-                    "B. Kloroplas",
-                    "C. Nukleus",
-                    "D. Ribosom",
-                    "E. Badan Golgi"
-                ],
-                correctAnswer: 1,
-                explanation: "Kloroplas adalah organel sel tumbuhan yang mengandung klorofil, pigmen hijau yang menangkap energi cahaya untuk fotosintesis. Proses ini mengubah karbon dioksida dan air menjadi glukosa dan oksigen. Kloroplas tidak dimiliki oleh sel hewan."
-            },
-            {
-                question: "Perhatikan tabel perubahan materi berikut:\n1) Besi berkarat\n2) Es mencair\n3) Kayu terbakar\n4) Gula larut dalam air\nManakah yang termasuk perubahan kimia?",
-                options: [
-                    "A. 1 dan 2",
-                    "B. 1 dan 3",
-                    "C. 2 dan 3",
-                    "D. 2 dan 4",
-                    "E. 3 dan 4"
-                ],
-                correctAnswer: 1,
-                explanation: "Perubahan kimia ditandai dengan terbentuknya zat baru yang sifatnya berbeda dari zat semula. Besi berkarat (menjadi besi oksida) dan kayu terbakar (menjadi arang/karbon) adalah perubahan kimia. Es mencair dan gula larut adalah perubahan fisika karena tidak menghasilkan zat baru."
-            }
-        ],
-        'IPS': [
-            {
-                question: "Perhatikan peta persebaran kerajaan Hindu-Buddha di Indonesia! Kerajaan yang mencapai puncak kejayaan pada masa pemerintahan Raja Hayam Wuruk dengan patih Gajah Mada adalah...",
-                options: [
-                    "A. Sriwijaya",
-                    "B. Majapahit",
-                    "C. Kutai",
-                    "D. Tarumanegara",
-                    "E. Singasari"
-                ],
-                correctAnswer: 1,
-                explanation: "Kerajaan Majapahit mencapai puncak kejayaan pada abad ke-14 di bawah Raja Hayam Wuruk (1350-1389) dengan patih Gajah Mada yang mengucapkan Sumpah Palapa untuk menyatukan Nusantara. Majapahit menguasai wilayah yang luas meliputi Sumatra, Jawa, Borneo, hingga sebagian Filipina."
-            },
-            {
-                question: "Perhatikan tabel kegiatan ekonomi berikut:\n1) Petani menanam padi\n2) Pabrik mengolah kelapa sawit menjadi minyak goreng\n3) Supermarket menjual kebutuhan pokok\n4) Konsumen membeli beras untuk kebutuhan rumah tangga\nManakah yang termasuk kegiatan distribusi?",
-                options: [
-                    "A. 1",
-                    "B. 2",
-                    "C. 3",
-                    "D. 4",
-                    "E. 1 dan 2"
-                ],
-                correctAnswer: 2,
-                explanation: "Kegiatan distribusi adalah kegiatan menyalurkan barang dari produsen ke konsumen. Supermarket menjual kebutuhan pokok termasuk distribusi. Petani menanam padi (produksi), pabrik mengolah sawit (produksi), konsumen membeli beras (konsumsi)."
-            }
-        ]
-    },
-    'SMA/SMK': {
-        'IPA': [
-            {
-                question: "Perhatikan reaksi kimia berikut: C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + Energi. Reaksi ini terjadi di organel sel yang memiliki ciri-ciri: 1) Memiliki membran dalam yang berlipat-lipat (krista), 2) Mengandung enzim untuk siklus Krebs, 3) Dikenal sebagai 'powerhouse of the cell'. Organel yang dimaksud adalah...",
-                options: [
-                    "A. Nukleus",
-                    "B. Ribosom",
-                    "C. Lisosom",
-                    "D. Mitokondria",
-                    "E. Retikulum Endoplasma"
-                ],
-                correctAnswer: 3,
-                explanation: "Reaksi tersebut adalah respirasi aerob yang terjadi di mitokondria. Mitokondria memiliki membran dalam berlipat (krista) yang memperluas permukaan untuk reaksi rantai transpor elektron. Matriks mitokondria mengandung enzim untuk siklus Krebs dan disebut 'powerhouse' karena menghasilkan ATP."
-            },
-            {
-                question: "Perhatikan grafik hubungan antara suhu dengan kelarutan beberapa garam! Berdasarkan grafik, kelarutan garam KNO₃ yang paling tepat dinyatakan dalam persamaan...",
-                options: [
-                    "A. Kelarutan tidak dipengaruhi suhu",
-                    "B. Kelarutan berkurang seiring kenaikan suhu",
-                    "C. Kelarutan bertambah secara linear dengan suhu",
-                    "D. Kelarutan bertambah secara eksponensial dengan suhu",
-                    "E. Kelarutan bertambah seiring kenaikan suhu tetapi tidak linear"
-                ],
-                correctAnswer: 4,
-                explanation: "Kelarutan KNO₃ meningkat dengan kenaikan suhu tetapi tidak linear. Pada suhu rendah, kenaikan kelarutan relatif kecil, sedangkan pada suhu tinggi, kenaikan kelarutan lebih signifikan. Ini karena proses pelarutan KNO₃ bersifat endoterm (menyerap panas)."
-            },
-            {
-                question: "Perhatikan gambar percobaan hukum Ohm! Jika hambatan kawat nikrom diperbesar dua kali semula sedangkan tegangan dijaga tetap, maka kuat arus yang mengalir akan...",
-                options: [
-                    "A. Tetap",
-                    "B. Menjadi dua kali semula",
-                    "C. Menjadi setengah kali semula",
-                    "D. Menjadi seperempat kali semula",
-                    "E. Menjadi empat kali semula"
-                ],
-                correctAnswer: 2,
-                explanation: "Berdasarkan hukum Ohm V = I × R, jika V konstan dan R menjadi 2 kali semula, maka I akan menjadi 1/2 kali semula. Hubungan antara I dan R berbanding terbalik ketika tegangan tetap."
-            },
-            {
-                question: "Perhatikan gambar sistem reproduksi pria! Organ yang berfungsi menghasilkan sperma dan hormon testosteron ditunjukkan oleh nomor...",
-                options: [
-                    "A. 1 (vesikula seminalis)",
-                    "B. 2 (prostat)",
-                    "C. 3 (epididimis)",
-                    "D. 4 (vas deferens)",
-                    "E. 5 (testis)"
-                ],
-                correctAnswer: 4,
-                explanation: "Testis (nomor 5) adalah organ reproduksi pria yang berfungsi menghasilkan sperma melalui proses spermatogenesis di tubulus seminiferus, dan menghasilkan hormon testosteron dari sel Leydig. Testosteron berperan dalam perkembangan ciri kelamin sekunder pria."
-            },
-            {
-                question: "Perhatikan tabel sifat koloid berikut:\n1) Efek Tyndall\n2) Gerak Brown\n3) Koagulasi\n4) Adsorpsi\nManakah yang merupakan sifat-sifat koloid?",
-                options: [
-                    "A. 1 dan 2",
-                    "B. 1, 2, dan 3",
-                    "C. 2 dan 3",
-                    "D. 3 dan 4",
-                    "E. Semua benar"
-                ],
-                correctAnswer: 4,
-                explanation: "Semua pernyataan adalah sifat koloid: 1) Efek Tyndall - penghamburan cahaya oleh partikel koloid, 2) Gerak Brown - gerak acak partikel koloid, 3) Koagulasi - penggumpalan partikel koloid, 4) Adsorpsi - penyerapan partikel pada permukaan koloid."
-            },
-            {
-                question: "Perhatikan gambar percobaan fotosintesis! Jika tanaman air Hydrilla sp. ditempatkan dalam corong terbalik yang berisi air dan dipapar cahaya, gas yang akan terkumpul di tabung reaksi adalah...",
-                options: [
-                    "A. Karbon dioksida",
-                    "B. Oksigen",
-                    "C. Nitrogen",
-                    "D. Hidrogen",
-                    "E. Metana"
-                ],
-                correctAnswer: 1,
-                explanation: "Pada fotosintesis, Hydrilla sp. akan menghasilkan oksigen sebagai produk samping yang dapat terlihat sebagai gelembung gas. Gas ini dapat diuji dengan membakar bara api yang akan menyala lebih terang karena oksigen mendukung pembakaran."
-            },
-            {
-                question: "Perhatikan gambar gelombang transversal berikut! Jika jarak AB = 30 cm dan waktu tempuh dari A ke B = 0,5 sekon, maka besar frekuensi gelombang adalah...",
-                options: [
-                    "A. 0,5 Hz",
-                    "B. 1 Hz",
-                    "C. 1,5 Hz",
-                    "D. 2 Hz",
-                    "E. 2,5 Hz"
-                ],
-                correctAnswer: 1,
-                explanation: "Jarak AB = 30 cm = 1,5λ → λ = 20 cm. Waktu tempuh A ke B = 0,5 s = 1,5T → T = 1/3 s. Frekuensi f = 1/T = 3 Hz. Namun jika AB adalah 1λ (30 cm) dan waktu 0,5 s adalah 1T, maka f = 1/0,5 = 2 Hz. (Asumsi soal mungkin berbeda)"
-            },
-            {
-                question: "Perhatikan reaksi redoks berikut: 2Al + 3Cu²⁺ → 2Al³⁺ + 3Cu. Pernyataan yang benar tentang reaksi ini adalah...",
-                options: [
-                    "A. Al mengalami reduksi",
-                    "B. Cu²⁺ bersifat oksidator",
-                    "C. Al bertindak sebagai oksidator",
-                    "D. Cu mengalami oksidasi",
-                    "E. Tidak terjadi transfer elektron"
-                ],
-                correctAnswer: 1,
-                explanation: "Dalam reaksi ini: Al → Al³⁺ + 3e⁻ (oksidasi, Al sebagai reduktor), Cu²⁺ + 2e⁻ → Cu (reduksi, Cu²⁺ sebagai oksidator). Oksidator adalah zat yang mengoksidasi zat lain dengan cara menerima elektron (Cu²⁺ dalam hal ini)."
-            },
-            {
-                question: "Perhatikan gambar percobaan hukum Mendel! Persilangan antara kacang ercis berbiji bulat (BB) dengan biji keriput (bb) menghasilkan F1 semua bulat. Jika F1 disilangkan sesamanya, perbandingan fenotip F2 adalah...",
-                options: [
-                    "A. Bulat semua",
-                    "B. Keriput semua",
-                    "C. Bulat : Keriput = 1:1",
-                    "D. Bulat : Keriput = 3:1",
-                    "E. Bulat : Keriput = 9:3:3:1"
-                ],
-                correctAnswer: 3,
-                explanation: "Ini mengikuti hukum segregasi Mendel. Parental: BB x bb → F1: Bb (bulat). F1 x F1: Bb x Bb → F2: 1 BB : 2 Bb : 1 bb (fenotip 3 bulat : 1 keriput). Sifat bulat dominan terhadap keriput."
-            },
-            {
-                question: "Perhatikan gambar sistem peredaran darah manusia! Pembuluh darah yang membawa darah kaya oksigen dari paru-paru ke jantung adalah...",
-                options: [
-                    "A. Vena pulmonalis",
-                    "B. Arteri pulmonalis",
-                    "C. Vena kava",
-                    "D. Aorta",
-                    "E. Arteri koronaria"
-                ],
-                correctAnswer: 0,
-                explanation: "Vena pulmonalis adalah pembuluh darah yang membawa darah kaya oksigen dari paru-paru ke atrium kiri jantung. Ini satu-satunya vena yang membawa darah bersih. Arteri pulmonalis membawa darah kotor dari jantung ke paru-paru."
-            }
-        ],
-        'IPS': [
-            {
-                question: "Perhatikan peta wilayah kekuasaan Majapahit! Faktor utama yang mendorong Majapahit menjadi kerajaan besar pada abad ke-14 adalah...",
-                options: [
-                    "A. Letaknya yang strategis di jalur perdagangan rempah",
-                    "B. Kekuatan militer yang tidak tertandingi",
-                    "C. Sistem pemerintahan yang terpusat dan efektif",
-                    "D. Kepemimpinan Hayam Wuruk dan Gajah Mada",
-                    "E. Adanya persatuan antar kerajaan melalui Sumpah Palapa"
-                ],
-                correctAnswer: 3,
-                explanation: "Puncak kejayaan Majapahit dicapai melalui kombinasi kepemimpinan Raja Hayam Wuruk yang visioner dan Patih Gajah Mada yang mampu menerapkan Sumpah Palapa untuk menyatukan Nusantara. Faktor lain seperti letak strategis dan sistem pemerintahan juga penting, tetapi kepemimpinan menjadi kunci utama."
-            },
-            {
-                question: "Perhatikan tabel indikator ekonomi berikut:\n1) Tingkat pengangguran\n2) Indeks Pembangunan Manusia (IPM)\n3) Pendapatan per kapita\n4) Tingkat inflasi\nIndikator yang digunakan untuk mengukur keberhasilan pembangunan ekonomi suatu negara adalah...",
-                options: [
-                    "A. 1 dan 2",
-                    "B. 1, 2, dan 3",
-                    "C. 2 dan 3",
-                    "D. 3 dan 4",
-                    "E. Semua benar"
-                ],
-                correctAnswer: 4,
-                explanation: "Keberhasilan pembangunan ekonomi diukur dengan berbagai indikator: 1) Tingkat pengangguran (ketenagakerjaan), 2) IPM (kesehatan, pendidikan, pendapatan), 3) Pendapatan per kapita (kesejahteraan), 4) Tingkat inflasi (stabilitas ekonomi). Semuanya memberikan gambaran komprehensif."
-            }
-        ]
-    }
-};
+        };
 
-// Add more questions to reach 100 for each level and subject
-// SD IPA (already has 10, need 10 more)
-for (let i = 0; i < 10; i++) {
-    QUESTION_BANK['SD']['IPA'].push({
-        question: `Soal SD IPA tambahan ${i+11}: Proses perubahan wujud dari gas menjadi cair disebut...`,
-        options: [
-            "A. Membeku",
-            "B. Mencair",
-            "C. Menguap",
-            "D. Mengembun",
-            "E. Menyublim"
-        ],
-        correctAnswer: 3,
-        explanation: `Penjelasan untuk soal SD IPA tambahan ${i+11}: Mengembun adalah proses perubahan wujud dari gas menjadi cair, contohnya ketika uap air di udara berubah menjadi titik-titik air di daun di pagi hari.`
-    });
-}
-
-// SD IPS (already has 10, need 10 more)
-for (let i = 0; i < 10; i++) {
-    QUESTION_BANK['SD']['IPS'].push({
-        question: `Soal SD IPS tambahan ${i+11}: Mata uang resmi yang digunakan di Jepang adalah...`,
-        options: [
-            "A. Dollar",
-            "B. Euro",
-            "C. Yen",
-            "D. Won",
-            "E. Ringgit"
-        ],
-        correctAnswer: 2,
-        explanation: `Penjelasan untuk soal SD IPS tambahan ${i+11}: Yen adalah mata uang resmi Jepang. Simbol untuk yen adalah ¥, dan kode ISO-nya adalah JPY.`
-    });
-}
-
-// SMP IPA (already has 10, need 10 more)
-for (let i = 0; i < 10; i++) {
-    QUESTION_BANK['SMP']['IPA'].push({
-        question: `Soal SMP IPA tambahan ${i+11}: Besaran yang satuannya dinyatakan dalam joule adalah...`,
-        options: [
-            "A. Gaya",
-            "B. Daya",
-            "C. Usaha",
-            "D. Tekanan",
-            "E. Massa"
-        ],
-        correctAnswer: 2,
-        explanation: `Penjelasan untuk soal SMP IPA tambahan ${i+11}: Joule adalah satuan untuk usaha dan energi. Usaha didefinisikan sebagai gaya kali perpindahan (W = F × s).`
-    });
-}
-
-// SMP IPS (already has 10, need 10 more)
-for (let i = 0; i < 10; i++) {
-    QUESTION_BANK['SMP']['IPS'].push({
-        question: `Soal SMP IPS tambahan ${i+11}: Lembaga negara yang bertugas membuat undang-undang adalah...`,
-        options: [
-            "A. Presiden",
-            "B. DPR",
-            "C. Mahkamah Agung",
-            "D. BPK",
-            "E. KPK"
-        ],
-        correctAnswer: 1,
-        explanation: `Penjelasan untuk soal SMP IPS tambahan ${i+11}: DPR (Dewan Perwakilan Rakyat) adalah lembaga legislatif yang bertugas membuat undang-undang bersama Presiden.`
-    });
-}
-
-// SMA IPA (already has 10, need 10 more)
-for (let i = 0; i < 10; i++) {
-    QUESTION_BANK['SMA/SMK']['IPA'].push({
-        question: `Soal SMA IPA tambahan ${i+11}: Senyawa dengan rumus molekul C₂H₅OH termasuk dalam golongan...`,
-        options: [
-            "A. Alkanon",
-            "B. Alkanal",
-            "C. Alkanol",
-            "D. Alkanoat",
-            "E. Alkuna"
-        ],
-        correctAnswer: 2,
-        explanation: `Penjelasan untuk soal SMA IPA tambahan ${i+11}: C₂H₅OH (etanol) termasuk alkohol (alkanol) karena memiliki gugus fungsi -OH yang terikat pada atom karbon jenuh.`
-    });
-}
-
-// SMA IPS (already has 10, need 10 more)
-for (let i = 0; i < 10; i++) {
-    QUESTION_BANK['SMA/SMK']['IPS'].push({
-        question: `Soal SMA IPS tambahan ${i+11}: Kebijakan moneter yang dilakukan bank sentral untuk mengatasi inflasi adalah...`,
-        options: [
-            "A. Menurunkan suku bunga",
-            "B. Meningkatkan giro wajib minimum",
-            "C. Membeli surat berharga di pasar",
-            "D. Meningkatkan belanja pemerintah",
-            "E. Menurunkan pajak penghasilan"
-        ],
-        correctAnswer: 1,
-        explanation: `Penjelasan untuk soal SMA IPS tambahan ${i+11}: Untuk mengatasi inflasi, bank sentral dapat melakukan kebijakan moneter kontraktif seperti menaikkan GWM (Giro Wajib Minimum) untuk mengurangi jumlah uang beredar.`
-    });
-}
-
-// Save the updated question bank to localStorage
-localStorage.setItem('questionBank', JSON.stringify(QUESTION_BANK));
-
-        // Load questions from localStorage if available
-        const savedQuestions = JSON.parse(localStorage.getItem('questionBank'));
-        if (savedQuestions) {
-            QUESTION_BANK = savedQuestions;
-        } else {
-            // Save initial questions to localStorage
-            localStorage.setItem('questionBank', JSON.stringify(QUESTION_BANK));
-        }
-        
         // Motivational messages based on score
         const MOTIVATIONAL_MESSAGES = {
             '90-100': 'Sempurna! Anda sangat luar biasa dalam menguasai materi ini. Pertahankan prestasi ini.',
@@ -2422,17 +1754,13 @@ localStorage.setItem('questionBank', JSON.stringify(QUESTION_BANK));
             
             // Floating buttons
             document.getElementById('whatsapp-btn').addEventListener('click', contactAdmin);
-            document.getElementById('question-bank-btn').addEventListener('click', showQuestionBankModal);
             document.getElementById('admin-panel-btn').addEventListener('click', showAdminPanelModal);
             
             // Modal close buttons
-            document.getElementById('close-question-bank-modal').addEventListener('click', hideQuestionBankModal);
             document.getElementById('close-admin-panel-modal').addEventListener('click', hideAdminPanelModal);
-            document.getElementById('close-edit-question-modal').addEventListener('click', hideEditQuestionModal);
             document.getElementById('close-edit-participant-modal').addEventListener('click', hideEditParticipantModal);
             
             // Modal submit buttons
-            document.getElementById('submit-question-bank-code').addEventListener('click', submitQuestionBankCode);
             document.getElementById('submit-admin-panel-code').addEventListener('click', submitAdminPanelCode);
             
             // Check form validity when fields change
@@ -2465,57 +1793,6 @@ localStorage.setItem('questionBank', JSON.stringify(QUESTION_BANK));
                 });
             });
 
-            // Question bank buttons
-            document.getElementById('add-question-btn').addEventListener('click', addQuestionToBank);
-            document.getElementById('filter-level').addEventListener('change', filterQuestions);
-            document.getElementById('filter-category').addEventListener('change', filterQuestions);
-            
-            // Image preview for new question
-            document.getElementById('question-image').addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    // Check file size (max 500KB)
-                    if (file.size > 500 * 1024) {
-                        showAlert('Ukuran gambar terlalu besar. Maksimal 500KB.', 'danger');
-                        this.value = '';
-                        return;
-                    }
-                    
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        const preview = document.getElementById('question-image-preview');
-                        preview.src = event.target.result;
-                        preview.style.display = 'block';
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-            
-            // Image preview for edit question
-            document.getElementById('edit-question-image').addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    // Check file size (max 500KB)
-                    if (file.size > 500 * 1024) {
-                        showAlert('Ukuran gambar terlalu besar. Maksimal 500KB.', 'danger');
-                        this.value = '';
-                        return;
-                    }
-                    
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        const preview = document.getElementById('edit-question-image-preview');
-                        preview.src = event.target.result;
-                        preview.style.display = 'block';
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-            
-            // Edit question modal buttons
-            document.getElementById('save-edit-question-btn').addEventListener('click', saveEditedQuestion);
-            document.getElementById('delete-question-btn').addEventListener('click', deleteQuestion);
-            
             // Admin panel buttons
             document.getElementById('save-codes-btn').addEventListener('click', saveCodes);
             document.getElementById('save-content-btn').addEventListener('click', saveContent);
@@ -2549,30 +1826,6 @@ localStorage.setItem('questionBank', JSON.stringify(QUESTION_BANK));
         });
         
         // Functions
-        function showAlert(message, type) {
-            const alertDiv = document.getElementById('add-question-alert');
-            alertDiv.textContent = message;
-            alertDiv.className = `alert alert-${type}`;
-            alertDiv.style.display = 'block';
-            
-            // Hide after 5 seconds
-            setTimeout(() => {
-                alertDiv.style.display = 'none';
-            }, 5000);
-        }
-        
-        function saveQuestionBank() {
-            localStorage.setItem('questionBank', JSON.stringify(QUESTION_BANK));
-        }
-        
-        function saveParticipantsData() {
-            localStorage.setItem('participantsData', JSON.stringify(participantsData));
-        }
-        
-        function saveAdminSettings() {
-            localStorage.setItem('adminSettings', JSON.stringify(adminSettings));
-        }
-        
         function loadAdminSettings() {
             // Load exam duration
             document.getElementById('exam-duration').value = adminSettings.examDuration;
@@ -2593,12 +1846,17 @@ localStorage.setItem('questionBank', JSON.stringify(QUESTION_BANK));
             // Load chairman name
             document.getElementById('chairman-name').value = adminSettings.chairmanName;
             
-            // Load subject toggles
+            // Load subject toggle
             document.getElementById('toggle-science').checked = adminSettings.enabledSubjects.IPA;
             document.getElementById('science-status').textContent = adminSettings.enabledSubjects.IPA ? 'Aktif' : 'Nonaktif';
-            
-            document.getElementById('toggle-social').checked = adminSettings.enabledSubjects.IPS;
-            document.getElementById('social-status').textContent = adminSettings.enabledSubjects.IPS ? 'Aktif' : 'Nonaktif';
+        }
+        
+        function saveParticipantsData() {
+            localStorage.setItem('participantsData', JSON.stringify(participantsData));
+        }
+        
+        function saveAdminSettings() {
+            localStorage.setItem('adminSettings', JSON.stringify(adminSettings));
         }
         
         function handleLogin() {
@@ -2750,11 +2008,11 @@ localStorage.setItem('questionBank', JSON.stringify(QUESTION_BANK));
                 examDate: new Date().toISOString()
             };
             
-            // Load questions based on level and subject
-            if (participantData.level && participantData.subject && QUESTION_BANK[participantData.level][participantData.subject]) {
-                questions = QUESTION_BANK[participantData.level][participantData.subject];
+            // Load questions based on level - hanya IPA
+            if (participantData.level && QUESTION_BANK[participantData.level]['IPA']) {
+                questions = QUESTION_BANK[participantData.level]['IPA'];
             } else {
-                // Default questions if subject not found
+                // Default questions
                 questions = QUESTION_BANK['SD']['IPA'];
             }
             
@@ -3175,26 +2433,6 @@ localStorage.setItem('questionBank', JSON.stringify(QUESTION_BANK));
             window.open(`https://wa.me/6285647709114?text=${message}`, '_blank');
         }
         
-        function showQuestionBankModal() {
-            document.getElementById('question-bank-modal').style.display = 'flex';
-        }
-        
-        function hideQuestionBankModal() {
-            document.getElementById('question-bank-modal').style.display = 'none';
-        }
-        
-        function submitQuestionBankCode() {
-            const code = document.getElementById('question-bank-code').value;
-            
-            if (code === adminSettings.questionBankCode) {
-                // Show question bank content
-                document.getElementById('question-bank-content').style.display = 'block';
-                filterQuestions();
-            } else {
-                alert('Kode bank soal salah. Silakan coba lagi.');
-            }
-        }
-        
         function showAdminPanelModal() {
             document.getElementById('admin-panel-modal').style.display = 'flex';
         }
@@ -3214,415 +2452,6 @@ localStorage.setItem('questionBank', JSON.stringify(QUESTION_BANK));
             }
         }
 
-        function addQuestionToBank() {
-            const level = document.getElementById('question-level').value;
-            const category = document.getElementById('question-category').value;
-            const questionText = document.getElementById('question-text-input').value.trim();
-            const options = [
-                document.getElementById('option-a').value.trim(),
-                document.getElementById('option-b').value.trim(),
-                document.getElementById('option-c').value.trim(),
-                document.getElementById('option-d').value.trim(),
-                document.getElementById('option-e').value.trim()
-            ];
-            const correctAnswer = parseInt(document.getElementById('correct-answer').value);
-            const explanation = document.getElementById('explanation-input').value.trim();
-            const imageFile = document.getElementById('question-image').files[0];
-            
-            // Validate inputs
-            if (!questionText) {
-                showAlert('Pertanyaan tidak boleh kosong', 'danger');
-                return;
-            }
-            
-            if (options.some(opt => !opt)) {
-                showAlert('Semua opsi jawaban harus diisi', 'danger');
-                return;
-            }
-            
-            if (!explanation) {
-                showAlert('Penjelasan tidak boleh kosong', 'danger');
-                return;
-            }
-            
-            // Create question object
-            const newQuestion = {
-                question: questionText,
-                options: options.map((opt, i) => `${String.fromCharCode(65 + i)}. ${opt}`),
-                correctAnswer: correctAnswer,
-                explanation: explanation,
-                image: null
-            };
-            
-            // Process image if uploaded
-            if (imageFile) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    newQuestion.image = event.target.result;
-                    
-                    // Add question to bank
-                    QUESTION_BANK[level][category].push(newQuestion);
-                    
-                    // Save to localStorage
-                    saveQuestionBank();
-                    
-                    // Clear form
-                    clearQuestionForm();
-                    
-                    // Refresh questions list
-                    filterQuestions();
-                    
-                    showAlert('Soal berhasil ditambahkan ke bank soal!', 'success');
-                };
-                reader.readAsDataURL(imageFile);
-            } else {
-                // Add question to bank without image
-                QUESTION_BANK[level][category].push(newQuestion);
-                
-                // Save to localStorage
-                saveQuestionBank();
-                
-                // Clear form
-                clearQuestionForm();
-                
-                // Refresh questions list
-                filterQuestions();
-                
-                showAlert('Soal berhasil ditambahkan ke bank soal!', 'success');
-            }
-        }
-        
-        function clearQuestionForm() {
-            document.getElementById('question-text-input').value = '';
-            document.getElementById('option-a').value = '';
-            document.getElementById('option-b').value = '';
-            document.getElementById('option-c').value = '';
-            document.getElementById('option-d').value = '';
-            document.getElementById('option-e').value = '';
-            document.getElementById('explanation-input').value = '';
-            document.getElementById('question-image').value = '';
-            document.getElementById('question-image-preview').style.display = 'none';
-        }
-        
-        function filterQuestions() {
-            const level = document.getElementById('filter-level').value;
-            const category = document.getElementById('filter-category').value;
-            const questionsList = document.querySelector('.questions-list');
-            
-            questionsList.innerHTML = '';
-            
-            if (level === 'all' && category === 'all') {
-                let hasQuestions = false;
-                
-                // Show all questions from all levels and categories
-                for (const lvl in QUESTION_BANK) {
-                    for (const cat in QUESTION_BANK[lvl]) {
-                        if (QUESTION_BANK[lvl][cat].length > 0) {
-                            hasQuestions = true;
-                            questionsList.innerHTML += `<h6>${lvl} - ${cat}</h6>`;
-                            
-                            QUESTION_BANK[lvl][cat].forEach((q, i) => {
-                                const questionItem = document.createElement('div');
-                                questionItem.className = 'question-item';
-                                
-                                questionItem.innerHTML = `
-                                    <p><strong>Soal ${i + 1}:</strong> ${q.question}</p>
-                                    ${q.image ? `<img src="${q.image}" style="max-width: 100%; max-height: 100px; margin: 5px 0;">` : ''}
-                                    <p>${q.options.join('<br>')}</p>
-                                    <p><strong>Jawaban:</strong> ${q.options[q.correctAnswer]}</p>
-                                    <p><strong>Penjelasan:</strong> ${q.explanation}</p>
-                                    <div class="question-actions">
-                                        <button class="question-action-btn edit-btn" data-level="${lvl}" data-category="${cat}" data-index="${i}">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </button>
-                                        <button class="question-action-btn delete-btn" data-level="${lvl}" data-category="${cat}" data-index="${i}">
-                                            <i class="fas fa-trash"></i> Hapus
-                                        </button>
-                                    </div>
-                                `;
-                                
-                                questionsList.appendChild(questionItem);
-                            });
-                        }
-                    }
-                }
-                
-                if (!hasQuestions) {
-                    questionsList.innerHTML = '<p id="no-questions-message">Belum ada soal yang tersedia.</p>';
-                }
-            } else if (level === 'all') {
-                // Show all questions from specific category across all levels
-                let hasQuestions = false;
-                
-                for (const lvl in QUESTION_BANK) {
-                    if (QUESTION_BANK[lvl][category] && QUESTION_BANK[lvl][category].length > 0) {
-                        hasQuestions = true;
-                        questionsList.innerHTML += `<h6>${lvl} - ${category}</h6>`;
-                        
-                        QUESTION_BANK[lvl][category].forEach((q, i) => {
-                            const questionItem = document.createElement('div');
-                            questionItem.className = 'question-item';
-                            
-                            questionItem.innerHTML = `
-                                <p><strong>Soal ${i + 1}:</strong> ${q.question}</p>
-                                ${q.image ? `<img src="${q.image}" style="max-width: 100%; max-height: 100px; margin: 5px 0;">` : ''}
-                                <p>${q.options.join('<br>')}</p>
-                                <p><strong>Jawaban:</strong> ${q.options[q.correctAnswer]}</p>
-                                <p><strong>Penjelasan:</strong> ${q.explanation}</p>
-                                <div class="question-actions">
-                                    <button class="question-action-btn edit-btn" data-level="${lvl}" data-category="${category}" data-index="${i}">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </button>
-                                    <button class="question-action-btn delete-btn" data-level="${lvl}" data-category="${category}" data-index="${i}">
-                                        <i class="fas fa-trash"></i> Hapus
-                                    </button>
-                                </div>
-                            `;
-                            
-                            questionsList.appendChild(questionItem);
-                        });
-                    }
-                }
-                
-                if (!hasQuestions) {
-                    questionsList.innerHTML = `<p id="no-questions-message">Belum ada soal yang tersedia untuk kategori ${category}.</p>`;
-                }
-            } else if (category === 'all') {
-                // Show all questions from specific level across all categories
-                let hasQuestions = false;
-                
-                for (const cat in QUESTION_BANK[level]) {
-                    if (QUESTION_BANK[level][cat].length > 0) {
-                        hasQuestions = true;
-                        questionsList.innerHTML += `<h6>${level} - ${cat}</h6>`;
-                        
-                        QUESTION_BANK[level][cat].forEach((q, i) => {
-                            const questionItem = document.createElement('div');
-                            questionItem.className = 'question-item';
-                            
-                            questionItem.innerHTML = `
-                                <p><strong>Soal ${i + 1}:</strong> ${q.question}</p>
-                                ${q.image ? `<img src="${q.image}" style="max-width: 100%; max-height: 100px; margin: 5px 0;">` : ''}
-                                <p>${q.options.join('<br>')}</p>
-                                <p><strong>Jawaban:</strong> ${q.options[q.correctAnswer]}</p>
-                                <p><strong>Penjelasan:</strong> ${q.explanation}</p>
-                                <div class="question-actions">
-                                    <button class="question-action-btn edit-btn" data-level="${level}" data-category="${cat}" data-index="${i}">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </button>
-                                    <button class="question-action-btn delete-btn" data-level="${level}" data-category="${cat}" data-index="${i}">
-                                        <i class="fas fa-trash"></i> Hapus
-                                    </button>
-                                </div>
-                            `;
-                            
-                            questionsList.appendChild(questionItem);
-                        });
-                    }
-                }
-                
-                if (!hasQuestions) {
-                    questionsList.innerHTML = `<p id="no-questions-message">Belum ada soal yang tersedia untuk tingkat ${level}.</p>`;
-                }
-            } else {
-                // Show questions from specific level and category
-                if (QUESTION_BANK[level][category] && QUESTION_BANK[level][category].length > 0) {
-                    QUESTION_BANK[level][category].forEach((q, i) => {
-                        const questionItem = document.createElement('div');
-                        questionItem.className = 'question-item';
-                        
-                        questionItem.innerHTML = `
-                            <p><strong>Soal ${i + 1}:</strong> ${q.question}</p>
-                            ${q.image ? `<img src="${q.image}" style="max-width: 100%; max-height: 100px; margin: 5px 0;">` : ''}
-                            <p>${q.options.join('<br>')}</p>
-                            <p><strong>Jawaban:</strong> ${q.options[q.correctAnswer]}</p>
-                            <p><strong>Penjelasan:</strong> ${q.explanation}</p>
-                            <div class="question-actions">
-                                <button class="question-action-btn edit-btn" data-level="${level}" data-category="${category}" data-index="${i}">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="question-action-btn delete-btn" data-level="${level}" data-category="${category}" data-index="${i}">
-                                    <i class="fas fa-trash"></i> Hapus
-                                </button>
-                            </div>
-                        `;
-                        
-                        questionsList.appendChild(questionItem);
-                    });
-                } else {
-                    questionsList.innerHTML = `<p id="no-questions-message">Belum ada soal yang tersedia untuk ${level} - ${category}.</p>`;
-                }
-            }
-            
-            // Add event listeners to edit and delete buttons
-            document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const level = this.getAttribute('data-level');
-                    const category = this.getAttribute('data-category');
-                    const index = parseInt(this.getAttribute('data-index'));
-                    editQuestion(level, category, index);
-                });
-            });
-            
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const level = this.getAttribute('data-level');
-                    const category = this.getAttribute('data-category');
-                    const index = parseInt(this.getAttribute('data-index'));
-                    
-                    if (confirm('Apakah Anda yakin ingin menghapus soal ini?')) {
-                        deleteQuestion(level, category, index);
-                    }
-                });
-            });
-        }
-        
-        function editQuestion(level, category, index) {
-            const question = QUESTION_BANK[level][category][index];
-            
-            // Fill the edit form
-            document.getElementById('edit-question-level').value = level;
-            document.getElementById('edit-question-category').value = category;
-            document.getElementById('edit-question-text').value = question.question;
-            
-            // Extract option texts (remove "A. ", "B. ", etc.)
-            document.getElementById('edit-option-a').value = question.options[0].substring(3);
-            document.getElementById('edit-option-b').value = question.options[1].substring(3);
-            document.getElementById('edit-option-c').value = question.options[2].substring(3);
-            document.getElementById('edit-option-d').value = question.options[3].substring(3);
-            document.getElementById('edit-option-e').value = question.options[4]?.substring(3) || '';
-            
-            document.getElementById('edit-correct-answer').value = question.correctAnswer;
-            document.getElementById('edit-explanation').value = question.explanation;
-            
-            // Show image preview if exists
-            const preview = document.getElementById('edit-question-image-preview');
-            if (question.image) {
-                preview.src = question.image;
-                preview.style.display = 'block';
-            } else {
-                preview.style.display = 'none';
-            }
-            
-            // Store original data for reference
-            document.getElementById('edit-question-index').value = index;
-            document.getElementById('edit-question-original-level').value = level;
-            document.getElementById('edit-question-original-category').value = category;
-            
-            // Show the modal
-            document.getElementById('edit-question-modal').style.display = 'flex';
-        }
-        
-        function hideEditQuestionModal() {
-            document.getElementById('edit-question-modal').style.display = 'none';
-        }
-        
-        function saveEditedQuestion() {
-            const originalLevel = document.getElementById('edit-question-original-level').value;
-            const originalCategory = document.getElementById('edit-question-original-category').value;
-            const newLevel = document.getElementById('edit-question-level').value;
-            const newCategory = document.getElementById('edit-question-category').value;
-            const index = parseInt(document.getElementById('edit-question-index').value);
-            const questionText = document.getElementById('edit-question-text').value.trim();
-            const options = [
-                document.getElementById('edit-option-a').value.trim(),
-                document.getElementById('edit-option-b').value.trim(),
-                document.getElementById('edit-option-c').value.trim(),
-                document.getElementById('edit-option-d').value.trim(),
-                document.getElementById('edit-option-e').value.trim()
-            ];
-            const correctAnswer = parseInt(document.getElementById('edit-correct-answer').value);
-            const explanation = document.getElementById('edit-explanation').value.trim();
-            const imageFile = document.getElementById('edit-question-image').files[0];
-            
-            // Validate inputs
-            if (!questionText) {
-                alert('Pertanyaan tidak boleh kosong');
-                return;
-            }
-            
-            if (options.some(opt => !opt)) {
-                alert('Semua opsi jawaban harus diisi');
-                return;
-            }
-            
-            if (!explanation) {
-                alert('Penjelasan tidak boleh kosong');
-                return;
-            }
-            
-            // Create updated question
-            const updatedQuestion = {
-                question: questionText,
-                options: options.map((opt, i) => `${String.fromCharCode(65 + i)}. ${opt}`),
-                correctAnswer: correctAnswer,
-                explanation: explanation,
-                image: QUESTION_BANK[originalLevel][originalCategory][index].image // Keep original image by default
-            };
-            
-            // Process new image if uploaded
-            if (imageFile) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    updatedQuestion.image = event.target.result;
-                    
-                    // If level or category changed, remove from old and add to new
-                    if (originalLevel !== newLevel || originalCategory !== newCategory) {
-                        QUESTION_BANK[originalLevel][originalCategory].splice(index, 1);
-                        QUESTION_BANK[newLevel][newCategory].push(updatedQuestion);
-                    } else {
-                        // Just update the question
-                        QUESTION_BANK[originalLevel][originalCategory][index] = updatedQuestion;
-                    }
-                    
-                    // Save to localStorage
-                    saveQuestionBank();
-                    
-                    // Refresh questions list
-                    filterQuestions();
-                    
-                    // Hide modal
-                    hideEditQuestionModal();
-                    
-                    alert('Perubahan soal berhasil disimpan!');
-                };
-                reader.readAsDataURL(imageFile);
-            } else {
-                // If level or category changed, remove from old and add to new
-                if (originalLevel !== newLevel || originalCategory !== newCategory) {
-                    QUESTION_BANK[originalLevel][originalCategory].splice(index, 1);
-                    QUESTION_BANK[newLevel][newCategory].push(updatedQuestion);
-                } else {
-                    // Just update the question
-                    QUESTION_BANK[originalLevel][originalCategory][index] = updatedQuestion;
-                }
-                
-                // Save to localStorage
-                saveQuestionBank();
-                
-                // Refresh questions list
-                filterQuestions();
-                
-                // Hide modal
-                hideEditQuestionModal();
-                
-                alert('Perubahan soal berhasil disimpan!');
-            }
-        }
-        
-        function deleteQuestion(level, category, index) {
-            // Remove question from the array
-            QUESTION_BANK[level][category].splice(index, 1);
-            
-            // Save to localStorage
-            saveQuestionBank();
-            
-            // Refresh questions list
-            filterQuestions();
-            
-            alert('Soal berhasil dihapus!');
-        }
-        
         function loadParticipantsData() {
             const tableBody = document.getElementById('participants-table-body');
             tableBody.innerHTML = '';
@@ -3953,17 +2782,11 @@ localStorage.setItem('questionBank', JSON.stringify(QUESTION_BANK));
         
         function saveCodes() {
             const newLoginCode = document.getElementById('new-login-code').value;
-            const newQuestionBankCode = document.getElementById('new-question-bank-code').value;
             const newAdminCode = document.getElementById('new-admin-code').value;
             
             if (newLoginCode) {
                 adminSettings.loginCode = newLoginCode;
                 document.getElementById('new-login-code').value = '';
-            }
-            
-            if (newQuestionBankCode) {
-                adminSettings.questionBankCode = newQuestionBankCode;
-                document.getElementById('new-question-bank-code').value = '';
             }
             
             if (newAdminCode) {
@@ -4007,10 +2830,9 @@ localStorage.setItem('questionBank', JSON.stringify(QUESTION_BANK));
             adminSettings.questionCount = questionCount;
             adminSettings.randomizeQuestions = randomizeQuestions;
             
-            // Update subject toggles
+            // Update subject toggle
             adminSettings.enabledSubjects = {
-                IPA: document.getElementById('toggle-science').checked,
-                IPS: document.getElementById('toggle-social').checked
+                IPA: document.getElementById('toggle-science').checked
             };
             
             // Save to localStorage
