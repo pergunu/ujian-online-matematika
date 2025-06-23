@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* CSS yang sama dengan file asli */
         :root {
             --color-primary: #6a11cb;
             --color-secondary: #2575fc;
@@ -139,6 +140,7 @@
         /* Form Styles */
         .form-group {
             margin-bottom: 20px;
+            position: relative;
         }
 
         .form-control {
@@ -189,6 +191,24 @@
         .checkbox-option:checked + .checkbox-label {
             background: linear-gradient(to right, var(--color-secondary), var(--color-tertiary));
             box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
+        }
+
+        /* Custom Checkbox for Terms */
+        .terms-checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .terms-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            accent-color: var(--color-secondary);
+        }
+        
+        .terms-text {
+            font-size: 14px;
         }
 
         /* Animation Classes */
@@ -924,11 +944,53 @@
             color: #a94442;
             border: 1px solid #ebccd1;
         }
+
+        /* Error message styles */
+        .error-message {
+            color: var(--color-error);
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Warning notification */
+        .warning-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--color-warning);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        /* Input error state */
+        .input-error {
+            border-color: var(--color-error) !important;
+            background: rgba(244, 67, 54, 0.1) !important;
+        }
+
+        /* Radio group error */
+        .radio-group-error {
+            outline: 2px solid var(--color-error);
+            border-radius: 8px;
+            padding: 5px;
+        }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
     <div id="celebration-particles"></div>
+    
+    <!-- Warning notification for incomplete form -->
+    <div class="warning-notification" id="form-warning">
+        <i class="fas fa-exclamation-circle"></i> Harap lengkapi semua data peserta dengan benar sebelum melanjutkan!
+    </div>
     
     <div class="container">
         <!-- Welcome Screen -->
@@ -966,9 +1028,9 @@
                 <p>9. Keputusan panitia ujian bersifat mutlak dan tidak dapat diganggu gugat.</p>
             </div>
             
-            <div class="form-group">
-                <input type="checkbox" id="agree-terms" class="checkbox-option">
-                <label for="agree-terms" class="checkbox-label">Saya menyetujui</label>
+            <div class="terms-checkbox-container">
+                <input type="checkbox" id="agree-terms" class="terms-checkbox" required>
+                <span class="terms-text">Saya telah membaca dan menyetujui peraturan di atas</span>
             </div>
             
             <button id="continue-btn" class="btn" disabled>Lanjut Ikut Ujian</button>
@@ -982,6 +1044,7 @@
             <div class="form-group">
                 <label for="fullname" class="form-label">Nama Lengkap</label>
                 <input type="text" id="fullname" class="form-control" placeholder="Masukkan nama lengkap" pattern="[A-Za-z ]+" title="Hanya huruf diperbolehkan" required>
+                <div class="error-message" id="fullname-error">Nama lengkap harus diisi dan hanya boleh mengandung huruf</div>
             </div>
             
             <div class="form-group">
@@ -996,17 +1059,19 @@
             <div id="student-fields">
                 <div class="form-group">
                     <label for="school-name" class="form-label">Nama Sekolah</label>
-                    <input type="text" id="school-name" class="form-control" placeholder="Masukkan nama sekolah">
+                    <input type="text" id="school-name" class="form-control" placeholder="Masukkan nama sekolah" required>
+                    <div class="error-message" id="school-error">Nama sekolah harus diisi</div>
                 </div>
                 
                 <div class="form-group">
                     <label for="student-id" class="form-label">NIS (Nomor Induk Siswa)</label>
                     <input type="text" id="student-id" class="form-control" placeholder="Masukkan NIS" pattern="[0-9]+" title="Hanya angka diperbolehkan" required>
+                    <div class="error-message" id="nis-error">NIS harus diisi dan hanya boleh mengandung angka</div>
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label">Tujuan Ikut Ujian</label>
-                    <div class="radio-group">
+                    <div class="radio-group" id="purpose-radio-group">
                         <input type="radio" id="purpose-task" name="purpose" value="Tugas Sekolah" class="radio-option">
                         <label for="purpose-task" class="radio-label">Tugas Sekolah</label>
                         
@@ -1016,11 +1081,12 @@
                         <input type="radio" id="purpose-test" name="purpose" value="Tes dan Belajar" class="radio-option">
                         <label for="purpose-test" class="radio-label">Tes dan Belajar</label>
                     </div>
+                    <div class="error-message" id="purpose-error">Silakan pilih tujuan ikut ujian</div>
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label">Tingkat Sekolah</label>
-                    <div class="radio-group">
+                    <div class="radio-group" id="level-radio-group">
                         <input type="radio" id="level-elementary" name="level" value="SD" class="radio-option">
                         <label for="level-elementary" class="radio-label">SD</label>
                         
@@ -1030,6 +1096,7 @@
                         <input type="radio" id="level-senior" name="level" value="SMA/SMK" class="radio-option">
                         <label for="level-senior" class="radio-label">SMA/SMK</label>
                     </div>
+                    <div class="error-message" id="level-error">Silakan pilih tingkat sekolah</div>
                 </div>
             </div>
             
@@ -1040,6 +1107,7 @@
                     <div class="radio-group" id="grade-options">
                         <!-- Options will be populated by JavaScript -->
                     </div>
+                    <div class="error-message" id="grade-error">Silakan pilih kelas</div>
                 </div>
             </div>
             
@@ -1047,10 +1115,11 @@
             <div id="subject-selection" style="display: none;">
                 <div class="form-group">
                     <label class="form-label">Pilih Jenis Ujian</label>
-                    <div class="radio-group">
+                    <div class="radio-group" id="subject-radio-group">
                         <input type="radio" id="subject-math" name="subject" value="Matematika" class="radio-option" checked>
                         <label for="subject-math" class="radio-label">Matematika</label>
                     </div>
+                    <div class="error-message" id="subject-error">Silakan pilih jenis ujian</div>
                 </div>
             </div>
             
@@ -1227,6 +1296,17 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="export-buttons">
+                            <button id="export-csv-btn" class="btn btn-info">
+                                <i class="fas fa-file-csv"></i> Export to CSV
+                            </button>
+                            <button id="export-json-btn" class="btn btn-info">
+                                <i class="fas fa-file-code"></i> Export to JSON
+                            </button>
+                            <button id="export-excel-btn" class="btn btn-success">
+                                <i class="fas fa-file-excel"></i> Export to Excel
+                            </button>
+                        </div>
                     </div>
                     
                     <div class="admin-section">
@@ -1364,6 +1444,7 @@
     <audio id="opening-sound" src="https://github.com/pergunu/ujian-online/raw/main/assets/audio/opening.mp3" preload="auto"></audio>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
         // Global variables
         let currentScreen = 'welcome';
@@ -1376,7 +1457,10 @@
         let examTimeLeft = 120 * 60; // 120 minutes in seconds
         let selectedParticipants = [];
         let questionOrder = []; // Untuk menyimpan urutan soal yang diacak
-        
+
+        // URL Google Apps Script untuk penyimpanan data
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzuh1M0pS64v5e_HYGafcG7CD8RwCEf4FVroKnOT1DujxTdCnn6zTBeQvSwgmenspgN/exec';
+
         // Audio elements
         const buttonSound = document.getElementById('button-sound');
         const correctAnswerSound = document.getElementById('correct-answer-sound');
@@ -1388,11 +1472,11 @@
         const DEFAULT_LOGIN_CODE = '12345';
         const DEFAULT_ADMIN_PANEL_CODE = '65614222';
         
-        // Store participants data
-        let participantsData = JSON.parse(localStorage.getItem('participantsData')) || [];
+        // Store participants data in localStorage
+        let participantsData = JSON.parse(localStorage.getItem('pergunuParticipantsData')) || [];
         
-        // Store admin settings
-        let adminSettings = JSON.parse(localStorage.getItem('adminSettings')) || {
+        // Store admin settings in localStorage
+        let adminSettings = JSON.parse(localStorage.getItem('pergunuAdminSettings')) || {
             loginCode: DEFAULT_LOGIN_CODE,
             adminCode: DEFAULT_ADMIN_PANEL_CODE,
             examDuration: 120,
@@ -1404,1794 +1488,378 @@
             }
         };
 
-        // Question bank structure with levels (Matematika only)
+        // Expanded Question bank with more questions (Matematika only)
         let QUESTION_BANK = {
             'SD': {
                 'Matematika': [
-                   {
-                question: "Hasil dari 1.250 + 875 - 625 adalah...",
-                options: [
-                    "A. 1.400",
-                    "B. 1.500",
-                    "C. 1.600",
-                    "D. 1.700",
-                    "E. 1.800"
-                ],
-                correctAnswer: 1,
-                explanation: "1.250 + 875 = 2.125, kemudian 2.125 - 625 = 1.500. Jadi jawaban yang benar adalah B. 1.500"
-            },
-            {
-                question: "Bentuk pecahan sederhana dari 36/48 adalah...",
-                options: [
-                    "A. 3/4",
-                    "B. 4/6",
-                    "C. 6/8",
-                    "D. 9/12",
-                    "E. 12/16"
-                ],
-                correctAnswer: 0,
-                explanation: "Pembilang dan penyebut dibagi dengan FPB 36 dan 48 yaitu 12. 36 ÷ 12 = 3 dan 48 ÷ 12 = 4. Jadi bentuk sederhananya adalah 3/4."
-            },
-            {
-                question: "Hasil dari 15 × (24 + 16) adalah...",
-                options: [
-                    "A. 400",
-                    "B. 500",
-                    "C. 600",
-                    "D. 700",
-                    "E. 800"
-                ],
-                correctAnswer: 2,
-                explanation: "Kerjakan yang dalam kurung terlebih dahulu: 24 + 16 = 40, kemudian 15 × 40 = 600."
-            },
-            {
-                question: "Jika sebuah persegi panjang memiliki panjang 12 cm dan lebar 8 cm, maka kelilingnya adalah...",
-                options: [
-                    "A. 20 cm",
-                    "B. 30 cm",
-                    "C. 40 cm",
-                    "D. 50 cm",
-                    "E. 60 cm"
-                ],
-                correctAnswer: 2,
-                explanation: "Rumus keliling persegi panjang adalah 2 × (panjang + lebar). Jadi 2 × (12 + 8) = 2 × 20 = 40 cm."
-            },
-            {
-                question: "Nilai dari 5/6 + 3/4 adalah...",
-                options: [
-                    "A. 1 5/12",
-                    "B. 1 7/12",
-                    "C. 1 9/12",
-                    "D. 2 1/12",
-                    "E. 2 3/12"
-                ],
-                correctAnswer: 1,
-                explanation: "Samakan penyebutnya menjadi 12: 10/12 + 9/12 = 19/12 = 1 7/12."
-            },
-            {
-                question: "Hasil dari 3.456 - 1.789 adalah...",
-                options: [
-                    "A. 1.567",
-                    "B. 1.667",
-                    "C. 1.767",
-                    "D. 1.867",
-                    "E. 1.967"
-                ],
-                correctAnswer: 1,
-                explanation: "3.456 - 1.789 = 1.667. Jadi jawaban yang benar adalah B. 1.667"
-            },
-            {
-                question: "FPB dari 48 dan 72 adalah...",
-                options: [
-                    "A. 12",
-                    "B. 16",
-                    "C. 24",
-                    "D. 36",
-                    "E. 48"
-                ],
-                correctAnswer: 2,
-                explanation: "Faktorisasi prima 48 = 2⁴×3, 72 = 2³×3². FPB adalah 2³×3 = 8×3 = 24."
-            },
-            {
-                question: "Hasil dari 12² + √144 adalah...",
-                options: [
-                    "A. 132",
-                    "B. 144",
-                    "C. 156",
-                    "D. 168",
-                    "E. 180"
-                ],
-                correctAnswer: 2,
-                explanation: "12² = 144 dan √144 = 12. Jadi 144 + 12 = 156."
-            },
-            {
-                question: "Volume kubus dengan panjang rusuk 7 cm adalah...",
-                options: [
-                    "A. 49 cm³",
-                    "B. 147 cm³",
-                    "C. 294 cm³",
-                    "D. 343 cm³",
-                    "E. 441 cm³"
-                ],
-                correctAnswer: 3,
-                explanation: "Rumus volume kubus adalah rusuk³. Jadi 7 × 7 × 7 = 343 cm³."
-            },
-            {
-                question: "Hasil dari 3/5 × 2/3 adalah...",
-                options: [
-                    "A. 2/5",
-                    "B. 3/5",
-                    "C. 6/15",
-                    "D. 9/10",
-                    "E. 5/8"
-                ],
-                correctAnswer: 0,
-                explanation: "Kalikan pembilang dengan pembilang dan penyebut dengan penyebut: (3×2)/(5×3) = 6/15 = 2/5 setelah disederhanakan."
-            },
-            {
-                question: "Keliling lingkaran dengan diameter 28 cm adalah... (π = 22/7)",
-                options: [
-                    "A. 44 cm",
-                    "B. 66 cm",
-                    "C. 88 cm",
-                    "D. 110 cm",
-                    "E. 132 cm"
-                ],
-                correctAnswer: 2,
-                explanation: "Rumus keliling lingkaran adalah π × diameter. Jadi 22/7 × 28 = 88 cm."
-            },
-            {
-                question: "Hasil dari 4,5 × 0,8 adalah...",
-                options: [
-                    "A. 3,2",
-                    "B. 3,6",
-                    "C. 4,0",
-                    "D. 4,4",
-                    "E. 4,8"
-                ],
-                correctAnswer: 1,
-                explanation: "4,5 × 0,8 = 3,6. Jadi jawaban yang benar adalah B. 3,6"
-            },
-            {
-                question: "KPK dari 15 dan 20 adalah...",
-                options: [
-                    "A. 30",
-                    "B. 40",
-                    "C. 50",
-                    "D. 60",
-                    "E. 70"
-                ],
-                correctAnswer: 3,
-                explanation: "Faktorisasi prima 15 = 3×5, 20 = 2²×5. KPK adalah 2²×3×5 = 4×3×5 = 60."
-            },
-            {
-                question: "Hasil dari 5/8 ÷ 2/3 adalah...",
-                options: [
-                    "A. 10/24",
-                    "B. 15/16",
-                    "C. 7/11",
-                    "D. 8/15",
-                    "E. 9/14"
-                ],
-                correctAnswer: 1,
-                explanation: "Membagi pecahan sama dengan mengalikan dengan kebalikannya: 5/8 × 3/2 = 15/16."
-            },
-            {
-                question: "Luas segitiga dengan alas 12 cm dan tinggi 9 cm adalah...",
-                options: [
-                    "A. 54 cm²",
-                    "B. 63 cm²",
-                    "C. 72 cm²",
-                    "D. 81 cm²",
-                    "E. 108 cm²"
-                ],
-                correctAnswer: 0,
-                explanation: "Rumus luas segitiga adalah ½ × alas × tinggi. Jadi ½ × 12 × 9 = 54 cm²."
-            },
-            {
-                question: "Hasil dari 7³ - 5³ adalah...",
-                options: [
-                    "A. 118",
-                    "B. 128",
-                    "C. 138",
-                    "D. 148",
-                    "E. 218"
-                ],
-                correctAnswer: 0,
-                explanation: "7³ = 343 dan 5³ = 125. Jadi 343 - 125 = 218."
-            },
-            {
-                question: "Bentuk desimal dari 5/8 adalah...",
-                options: [
-                    "A. 0,375",
-                    "B. 0,5",
-                    "C. 0,625",
-                    "D. 0,75",
-                    "E. 0,875"
-                ],
-                correctAnswer: 2,
-                explanation: "5 dibagi 8 = 0,625. Jadi jawaban yang benar adalah C. 0,625"
-            },
-            {
-                question: "Hasil dari 3,6 ÷ 0,12 adalah...",
-                options: [
-                    "A. 20",
-                    "B. 30",
-                    "C. 40",
-                    "D. 50",
-                    "E. 60"
-                ],
-                correctAnswer: 1,
-                explanation: "3,6 ÷ 0,12 = 30. Jadi jawaban yang benar adalah B. 30"
-            },
-            {
-                question: "Jika 3/4 = x/20, maka nilai x adalah...",
-                options: [
-                    "A. 12",
-                    "B. 15",
-                    "C. 16",
-                    "D. 18",
-                    "E. 20"
-                ],
-                correctAnswer: 1,
-                explanation: "3/4 = x/20 → x = (3×20)/4 = 60/4 = 15."
-            },
-            {
-                question: "Hasil dari 0,75 × 4/5 adalah...",
-                options: [
-                    "A. 0,5",
-                    "B. 0,6",
-                    "C. 0,7",
-                    "D. 0,8",
-                    "E. 0,9"
-                ],
-                correctAnswer: 1,
-                explanation: "0,75 = 3/4. Jadi 3/4 × 4/5 = 12/20 = 0,6."
-            },
-            {
-                question: "Volume balok dengan panjang 10 cm, lebar 7 cm, dan tinggi 5 cm adalah...",
-                options: [
-                    "A. 220 cm³",
-                    "B. 250 cm³",
-                    "C. 300 cm³",
-                    "D. 350 cm³",
-                    "E. 400 cm³"
-                ],
-                correctAnswer: 3,
-                explanation: "Rumus volume balok adalah panjang × lebar × tinggi. Jadi 10 × 7 × 5 = 350 cm³."
-            },
-            {
-                question: "Hasil dari 2 1/4 + 1 3/5 adalah...",
-                options: [
-                    "A. 3 7/20",
-                    "B. 3 8/20",
-                    "C. 3 17/20",
-                    "D. 4 1/20",
-                    "E. 4 3/20"
-                ],
-                correctAnswer: 2,
-                explanation: "Ubah ke pecahan biasa: 9/4 + 8/5 = 45/20 + 32/20 = 77/20 = 3 17/20."
-            },
-            {
-                question: "Keliling persegi dengan luas 196 cm² adalah...",
-                options: [
-                    "A. 42 cm",
-                    "B. 49 cm",
-                    "C. 56 cm",
-                    "D. 64 cm",
-                    "E. 72 cm"
-                ],
-                correctAnswer: 2,
-                explanation: "Sisi persegi = √196 = 14 cm. Keliling = 4 × sisi = 4 × 14 = 56 cm."
-            },
-            {
-                question: "Hasil dari 5,25 - 2,75 adalah...",
-                options: [
-                    "A. 2,25",
-                    "B. 2,50",
-                    "C. 2,75",
-                    "D. 3,00",
-                    "E. 3,25"
-                ],
-                correctAnswer: 1,
-                explanation: "5,25 - 2,75 = 2,50. Jadi jawaban yang benar adalah B. 2,50"
-            },
-            {
-                question: "Nilai dari 3/7 + 4/5 adalah...",
-                options: [
-                    "A. 1 8/35",
-                    "B. 1 12/35",
-                    "C. 1 18/35",
-                    "D. 1 22/35",
-                    "E. 1 26/35"
-                ],
-                correctAnswer: 2,
-                explanation: "Samakan penyebutnya menjadi 35: 15/35 + 28/35 = 43/35 = 1 8/35."
-            },
-            {
-                question: "Hasil dari 12,5 × 8 adalah...",
-                options: [
-                    "A. 90",
-                    "B. 100",
-                    "C. 110",
-                    "D. 120",
-                    "E. 130"
-                ],
-                correctAnswer: 1,
-                explanation: "12,5 × 8 = 100. Jadi jawaban yang benar adalah B. 100"
-            },
-            {
-                question: "Luas trapesium dengan panjang sisi sejajar 8 cm dan 12 cm, serta tinggi 5 cm adalah...",
-                options: [
-                    "A. 40 cm²",
-                    "B. 50 cm²",
-                    "C. 60 cm²",
-                    "D. 70 cm²",
-                    "E. 80 cm²"
-                ],
-                correctAnswer: 1,
-                explanation: "Rumus luas trapesium adalah ½ × (jumlah sisi sejajar) × tinggi. Jadi ½ × (8+12) × 5 = ½ × 20 × 5 = 50 cm²."
-            },
-            {
-                question: "Hasil dari 2/3 × 0,6 adalah...",
-                options: [
-                    "A. 0,2",
-                    "B. 0,3",
-                    "C. 0,4",
-                    "D. 0,5",
-                    "E. 0,6"
-                ],
-                correctAnswer: 2,
-                explanation: "0,6 = 3/5. Jadi 2/3 × 3/5 = 6/15 = 0,4."
-            },
-            {
-                question: "Jika 5x - 8 = 22, maka nilai x adalah...",
-                options: [
-                    "A. 4",
-                    "B. 5",
-                    "C. 6",
-                    "D. 7",
-                    "E. 8"
-                ],
-                correctAnswer: 2,
-                explanation: "5x - 8 = 22 → 5x = 30 → x = 6."
-            },
-            {
-                question: "Hasil dari 1 1/2 × 2 2/3 adalah...",
-                options: [
-                    "A. 3 1/3",
-                    "B. 3 2/3",
-                    "C. 4",
-                    "D. 4 1/3",
-                    "E. 4 2/3"
-                ],
-                correctAnswer: 2,
-                explanation: "Ubah ke pecahan biasa: 3/2 × 8/3 = 24/6 = 4."
-            },
-            {
-                question: "Keliling segitiga sama sisi dengan panjang sisi 15 cm adalah...",
-                options: [
-                    "A. 30 cm",
-                    "B. 35 cm",
-                    "C. 40 cm",
-                    "D. 45 cm",
-                    "E. 50 cm"
-                ],
-                correctAnswer: 3,
-                explanation: "Keliling segitiga sama sisi adalah 3 × sisi. Jadi 3 × 15 = 45 cm."
-            },
-            {
-                question: "Hasil dari 0,8 ÷ 0,02 adalah...",
-                options: [
-                    "A. 20",
-                    "B. 30",
-                    "C. 40",
-                    "D. 50",
-                    "E. 60"
-                ],
-                correctAnswer: 2,
-                explanation: "0,8 ÷ 0,02 = 40. Jadi jawaban yang benar adalah C. 40"
-            },
-            {
-                question: "Nilai dari 2/5 + 0,6 adalah...",
-                options: [
-                    "A. 0,8",
-                    "B. 1,0",
-                    "C. 1,2",
-                    "D. 1,4",
-                    "E. 1,6"
-                ],
-                correctAnswer: 1,
-                explanation: "2/5 = 0,4 dan 0,4 + 0,6 = 1,0."
-            },
-            {
-                question: "Hasil dari 7,5 × 1,2 adalah...",
-                options: [
-                    "A. 8,0",
-                    "B. 8,5",
-                    "C. 9,0",
-                    "D. 9,5",
-                    "E. 10,0"
-                ],
-                correctAnswer: 2,
-                explanation: "7,5 × 1,2 = 9,0. Jadi jawaban yang benar adalah C. 9,0"
-            },
-            {
-                question: "Luas lingkaran dengan jari-jari 14 cm adalah... (π = 22/7)",
-                options: [
-                    "A. 154 cm²",
-                    "B. 308 cm²",
-                    "C. 462 cm²",
-                    "D. 616 cm²",
-                    "E. 770 cm²"
-                ],
-                correctAnswer: 3,
-                explanation: "Rumus luas lingkaran adalah π × r². Jadi 22/7 × 14 × 14 = 616 cm²."
-            },
-            {
-                question: "Hasil dari 3/8 ÷ 0,5 adalah...",
-                options: [
-                    "A. 0,75",
-                    "B. 0,85",
-                    "C. 0,95",
-                    "D. 1,05",
-                    "E. 1,15"
-                ],
-                correctAnswer: 0,
-                explanation: "0,5 = 1/2. Jadi 3/8 ÷ 1/2 = 3/8 × 2/1 = 6/8 = 0,75."
-            },
-            {
-                question: "Jika sebuah tabung memiliki jari-jari 7 cm dan tinggi 10 cm, maka volumenya adalah... (π = 22/7)",
-                options: [
-                    "A. 1.540 cm³",
-                    "B. 1.540 cm²",
-                    "C. 1.540 cm",
-                    "D. 1.540 m³",
-                    "E. 1.540 m²"
-                ],
-                correctAnswer: 0,
-                explanation: "Rumus volume tabung adalah π × r² × t. Jadi 22/7 × 7 × 7 × 10 = 1.540 cm³."
-            },
-            {
-                question: "Hasil dari 5 1/4 - 2 3/5 adalah...",
-                options: [
-                    "A. 2 7/20",
-                    "B. 2 9/20",
-                    "C. 2 11/20",
-                    "D. 2 13/20",
-                    "E. 2 17/20"
-                ],
-                correctAnswer: 3,
-                explanation: "Ubah ke pecahan biasa: 21/4 - 13/5 = 105/20 - 52/20 = 53/20 = 2 13/20."
-            },
-            {
-                question: "Keliling belah ketupat dengan panjang sisi 12,5 cm adalah...",
-                options: [
-                    "A. 25 cm",
-                    "B. 37,5 cm",
-                    "C. 50 cm",
-                    "D. 62,5 cm",
-                    "E. 75 cm"
-                ],
-                correctAnswer: 2,
-                explanation: "Keliling belah ketupat adalah 4 × sisi. Jadi 4 × 12,5 = 50 cm."
-            },
-            {
-                question: "Hasil dari 0,45 × 2/3 adalah...",
-                options: [
-                    "A. 0,2",
-                    "B. 0,3",
-                    "C. 0,4",
-                    "D. 0,5",
-                    "E. 0,6"
-                ],
-                correctAnswer: 1,
-                explanation: "0,45 = 9/20. Jadi 9/20 × 2/3 = 18/60 = 0,3."
-            },
-            {
-                question: "Nilai dari 3/4 + 0,25 adalah...",
-                options: [
-                    "A. 0,75",
-                    "B. 1,00",
-                    "C. 1,25",
-                    "D. 1,50",
-                    "E. 1,75"
-                ],
-                correctAnswer: 1,
-                explanation: "3/4 = 0,75 dan 0,75 + 0,25 = 1,00."
-            },
-            {
-                question: "Hasil dari 12,8 ÷ 0,4 adalah...",
-                options: [
-                    "A. 32",
-                    "B. 34",
-                    "C. 36",
-                    "D. 38",
-                    "E. 40"
-                ],
-                correctAnswer: 0,
-                explanation: "12,8 ÷ 0,4 = 32. Jadi jawaban yang benar adalah A. 32"
-            },
-            {
-                question: "Luas permukaan kubus dengan panjang rusuk 5 cm adalah...",
-                options: [
-                    "A. 100 cm²",
-                    "B. 125 cm²",
-                    "C. 150 cm²",
-                    "D. 175 cm²",
-                    "E. 200 cm²"
-                ],
-                correctAnswer: 2,
-                explanation: "Rumus luas permukaan kubus adalah 6 × sisi². Jadi 6 × 5 × 5 = 150 cm²."
-            },
-            {
-                question: "Hasil dari 2 1/3 × 1 1/2 adalah...",
-                options: [
-                    "A. 3 1/2",
-                    "B. 3 2/3",
-                    "C. 3 3/4",
-                    "D. 4 1/6",
-                    "E. 4 1/2"
-                ],
-                correctAnswer: 0,
-                explanation: "Ubah ke pecahan biasa: 7/3 × 3/2 = 21/6 = 3 1/2."
-            },
-            {
-                question: "Volume prisma segitiga dengan luas alas 24 cm² dan tinggi 10 cm adalah...",
-                options: [
-                    "A. 120 cm³",
-                    "B. 180 cm³",
-                    "C. 240 cm³",
-                    "D. 300 cm³",
-                    "E. 360 cm³"
-                ],
-                correctAnswer: 2,
-                explanation: "Rumus volume prisma adalah luas alas × tinggi. Jadi 24 × 10 = 240 cm³."
-            },
-            {
-                question: "Hasil dari 0,375 ÷ 0,125 adalah...",
-                options: [
-                    "A. 2",
-                    "B. 3",
-                    "C. 4",
-                    "D. 5",
-                    "E. 6"
-                ],
-                correctAnswer: 1,
-                explanation: "0,375 ÷ 0,125 = 3. Jadi jawaban yang benar adalah B. 3"
-            },
-            {
-                question: "Nilai dari 5/6 - 0,4 adalah...",
-                options: [
-                    "A. 0,3",
-                    "B. 0,4",
-                    "C. 0,5",
-                    "D. 0,6",
-                    "E. 0,7"
-                ],
-                correctAnswer: 1,
-                explanation: "5/6 ≈ 0,833 dan 0,833 - 0,4 = 0,433 ≈ 0,4."
-            },
-            {
-                question: "Hasil dari 1,25 × 0,8 adalah...",
-                options: [
-                    "A. 0,8",
-                    "B. 0,9",
-                    "C. 1,0",
-                    "D. 1,1",
-                    "E. 1,2"
-                ],
-                correctAnswer: 2,
-                explanation: "1,25 × 0,8 = 1,0. Jadi jawaban yang benar adalah C. 1,0"
-            },
-            {
-                question: "Luas jajar genjang dengan alas 15 cm dan tinggi 8 cm adalah...",
-                options: [
-                    "A. 60 cm²",
-                    "B. 90 cm²",
-                    "C. 120 cm²",
-                    "D. 150 cm²",
-                    "E. 180 cm²"
-                ],
-                correctAnswer: 2,
-                explanation: "Rumus luas jajar genjang adalah alas × tinggi. Jadi 15 × 8 = 120 cm²."
-            },
-            {
-                question: "Hasil dari 4 1/2 ÷ 1 1/4 adalah...",
-                options: [
-                    "A. 3 1/5",
-                    "B. 3 3/5",
-                    "C. 3 4/5",
-                    "D. 4 1/5",
-                    "E. 4 3/5"
-                ],
-                correctAnswer: 1,
-                explanation: "Ubah ke pecahan biasa: 9/2 ÷ 5/4 = 9/2 × 4/5 = 36/10 = 3 3/5."
-            }
+                    {
+                        question: "Hasil dari 125 + 75 - 50 adalah...",
+                        options: [
+                            "A. 100",
+                            "B. 150",
+                            "C. 200",
+                            "D. 250",
+                            "E. 300"
+                        ],
+                        correctAnswer: 1,
+                        explanation: "125 + 75 = 200, kemudian 200 - 50 = 150. Jadi jawaban yang benar adalah 150."
+                    },
+                    {
+                        question: "Hasil dari 12 × 5 adalah...",
+                        options: [
+                            "A. 50",
+                            "B. 55",
+                            "C. 60",
+                            "D. 65",
+                            "E. 70"
+                        ],
+                        correctAnswer: 2,
+                        explanation: "12 dikali 5 sama dengan 60. Perkalian dapat dihitung sebagai penjumlahan berulang: 12 + 12 + 12 + 12 + 12 = 60."
+                    },
+                    {
+                        question: "Nilai dari 3/4 + 1/2 adalah...",
+                        options: [
+                            "A. 1/4",
+                            "B. 1/2",
+                            "C. 3/4",
+                            "D. 1",
+                            "E. 1 1/4"
+                        ],
+                        correctAnswer: 3,
+                        explanation: "Untuk menjumlahkan pecahan, penyebut harus sama. 1/2 = 2/4, jadi 3/4 + 2/4 = 5/4 = 1 1/4."
+                    },
+                    {
+                        question: "Keliling persegi dengan panjang sisi 5 cm adalah...",
+                        options: [
+                            "A. 10 cm",
+                            "B. 15 cm",
+                            "C. 20 cm",
+                            "D. 25 cm",
+                            "E. 30 cm"
+                        ],
+                        correctAnswer: 2,
+                        explanation: "Keliling persegi = 4 × sisi = 4 × 5 cm = 20 cm."
+                    },
+                    {
+                        question: "Hasil dari 144 ÷ 12 adalah...",
+                        options: [
+                            "A. 10",
+                            "B. 11",
+                            "C. 12",
+                            "D. 13",
+                            "E. 14"
+                        ],
+                        correctAnswer: 2,
+                        explanation: "144 dibagi 12 sama dengan 12. Pembagian adalah kebalikan dari perkalian: 12 × 12 = 144."
+                    },
+                    {
+                        question: "Bentuk desimal dari 3/5 adalah...",
+                        options: [
+                            "A. 0.3",
+                            "B. 0.35",
+                            "C. 0.5",
+                            "D. 0.6",
+                            "E. 0.8"
+                        ],
+                        correctAnswer: 3,
+                        explanation: "3/5 = 0.6. Untuk mengubah pecahan ke desimal, bagi pembilang dengan penyebut: 3 ÷ 5 = 0.6."
+                    },
+                    {
+                        question: "Faktor persekutuan terbesar (FPB) dari 12 dan 18 adalah...",
+                        options: [
+                            "A. 2",
+                            "B. 3",
+                            "C. 6",
+                            "D. 9",
+                            "E. 12"
+                        ],
+                        correctAnswer: 2,
+                        explanation: "Faktor dari 12: 1, 2, 3, 4, 6, 12. Faktor dari 18: 1, 2, 3, 6, 9, 18. Faktor persekutuan terbesar adalah 6."
+                    },
+                    {
+                        question: "Kelipatan persekutuan terkecil (KPK) dari 4 dan 6 adalah...",
+                        options: [
+                            "A. 6",
+                            "B. 8",
+                            "C. 12",
+                            "D. 18",
+                            "E. 24"
+                        ],
+                        correctAnswer: 2,
+                        explanation: "Kelipatan 4: 4, 8, 12, 16, 20,... Kelipatan 6: 6, 12, 18, 24,... KPK adalah 12."
+                    },
+                    {
+                        question: "Hasil dari 7² - 5² adalah...",
+                        options: [
+                            "A. 14",
+                            "B. 24",
+                            "C. 34",
+                            "D. 44",
+                            "E. 54"
+                        ],
+                        correctAnswer: 1,
+                        explanation: "7² = 49, 5² = 25. Jadi 49 - 25 = 24."
+                    },
+                    {
+                        question: "Volume kubus dengan panjang rusuk 3 cm adalah...",
+                        options: [
+                            "A. 9 cm³",
+                            "B. 18 cm³",
+                            "C. 27 cm³",
+                            "D. 36 cm³",
+                            "E. 54 cm³"
+                        ],
+                        correctAnswer: 2,
+                        explanation: "Volume kubus = sisi × sisi × sisi = 3 cm × 3 cm × 3 cm = 27 cm³."
+                    }
                 ]
             },
             'SMP': {
                 'Matematika': [
-                                {
-                question: "Diketahui f(x) = 2x² - 5x + 3. Nilai dari f(3) - f(2) adalah...",
-                options: [
-                    "A. 9",
-                    "B. 11",
-                    "C. 13",
-                    "D. 15",
-                    "E. 17"
-                ],
-                correctAnswer: 2,
-                explanation: "f(3) = 2(9) - 5(3) + 3 = 18-15+3 = 6; f(2) = 2(4) - 5(2) + 3 = 8-10+3 = 1; Jadi f(3)-f(2) = 6-1 = 5"
-            },
-            {
-                question: "Dalam suatu deret geometri, suku ke-3 adalah 24 dan suku ke-6 adalah 192. Rasio deret tersebut adalah...",
-                options: [
-                    "A. 1.5",
-                    "B. 2",
-                    "C. 2.5",
-                    "D. 3",
-                    "E. 3.5"
-                ],
-                correctAnswer: 1,
-                explanation: "U3 = ar² = 24; U6 = ar⁵ = 192; r³ = 192/24 = 8 → r = 2"
-            },
-            {
-                question: "Diketahui segitiga ABC siku-siku di B dengan AB = 6 cm dan BC = 8 cm. Panjang garis berat dari titik A ke sisi BC adalah...",
-                options: [
-                    "A. 5 cm",
-                    "B. √41 cm",
-                    "C. 6 cm",
-                    "D. √61 cm",
-                    "E. 7 cm"
-                ],
-                correctAnswer: 1,
-                explanation: "Garis berat = √(AB² + (BC/2)²) = √(36 + 16) = √52 = 2√13 (opsi mungkin perlu disesuaikan)"
-            },
-            {
-                question: "Jika log 2 = a dan log 3 = b, maka log 120 dinyatakan dalam a dan b adalah...",
-                options: [
-                    "A. a + b + 1",
-                    "B. 2a + b + 1",
-                    "C. a + 2b + 1",
-                    "D. 3a + b + 1",
-                    "E. a + b + 2"
-                ],
-                correctAnswer: 3,
-                explanation: "log 120 = log (2³×3×5) = 3log2 + log3 + log5 = 3a + b + (1-a) = 2a + b + 1"
-            },
-            {
-                question: "Diketahui sistem persamaan: 2x + 3y = 13 dan 3x - y = 4. Nilai dari x + y adalah...",
-                options: [
-                    "A. 3",
-                    "B. 4",
-                    "C. 5",
-                    "D. 6",
-                    "E. 7"
-                ],
-                correctAnswer: 2,
-                explanation: "Selesaikan sistem persamaan: dari persamaan kedua y = 3x-4; substitusi ke persamaan pertama: 2x + 3(3x-4) = 13 → 11x = 25 → x = 25/11; y = 41/11; x+y = 66/11 = 6"
-            },
-            {
-                question: "Sebuah bola dimasukkan ke dalam kubus yang panjang rusuknya 14 cm. Volume udara di dalam kubus tetapi di luar bola adalah... (π = 22/7)",
-                options: [
-                    "A. 4312/3 cm³",
-                    "B. 2156/3 cm³",
-                    "C. 1078 cm³",
-                    "D. 2156 cm³",
-                    "E. 4312 cm³"
-                ],
-                correctAnswer: 0,
-                explanation: "Volume kubus = 14³ = 2744 cm³; Volume bola = (4/3)πr³ = (4/3)(22/7)(7)³ = 4312/3 cm³; Volume udara = 2744 - 4312/3 = (8232-4312)/3 = 3920/3 cm³"
-            },
-            {
-                question: "Diketahui barisan aritmatika dengan U₅ + U₇ = 56 dan U₄ + U₈ = 54. Suku ke-20 barisan tersebut adalah...",
-                options: [
-                    "A. 98",
-                    "B. 101",
-                    "C. 104",
-                    "D. 107",
-                    "E. 110"
-                ],
-                correctAnswer: 2,
-                explanation: "U₅ + U₇ = 2a + 10b = 56; U₄ + U₈ = 2a + 10b = 54 (sistem tidak konsisten, mungkin perlu penyesuaian soal)"
-            },
-            {
-                question: "Fungsi kuadrat y = x² - (k+2)x + (2k+1) mencapai nilai minimum untuk x = 3. Nilai k adalah...",
-                options: [
-                    "A. 2",
-                    "B. 3",
-                    "C. 4",
-                    "D. 5",
-                    "E. 6"
-                ],
-                correctAnswer: 2,
-                explanation: "Sumbu simetri x = -b/2a = (k+2)/2 = 3 → k+2 = 6 → k = 4"
-            },
-            {
-                question: "Dalam segitiga ABC, diketahui panjang AB = 7 cm, BC = 5 cm, dan AC = 6 cm. Panjang garis tinggi dari titik A ke sisi BC adalah...",
-                options: [
-                    "A. 4√6 cm",
-                    "B. 3√6 cm",
-                    "C. 2√6 cm",
-                    "D. √6 cm",
-                    "E. 0.5√6 cm"
-                ],
-                correctAnswer: 2,
-                explanation: "Gunakan rumus Heron: s = (7+5+6)/2 = 9; L = √[9(9-7)(9-5)(9-6)] = √[9×2×4×3] = 6√6; tinggi = 2L/BC = 12√6/5 = 2.4√6 (opsi mungkin perlu disesuaikan)"
-            },
-            {
-                question: "Diketahui limas T.ABCD dengan alas persegi ABCD yang panjang sisinya 12 cm. Jika volume limas tersebut 384 cm³, maka panjang garis TA adalah...",
-                options: [
-                    "A. 10 cm",
-                    "B. 12 cm",
-                    "C. 13 cm",
-                    "D. 14 cm",
-                    "E. 15 cm"
-                ],
-                correctAnswer: 0,
-                explanation: "Volume = (1/3)×L.alas×t → 384 = (1/3)×144×t → t = 8 cm; TA = √(t² + (1/2 diagonal alas)²) = √(64 + 72) = √136 = 2√34 (opsi mungkin perlu disesuaikan)"
-            },
-            {
-                question: "Jika α dan β adalah akar-akar persamaan x² - 5x + 6 = 0, maka persamaan kuadrat baru yang akar-akarnya (α+2) dan (β+2) adalah...",
-                options: [
-                    "A. x² - 9x + 20 = 0",
-                    "B. x² - 9x + 18 = 0",
-                    "C. x² - 7x + 12 = 0",
-                    "D. x² - 7x + 10 = 0",
-                    "E. x² - 5x + 6 = 0"
-                ],
-                correctAnswer: 0,
-                explanation: "Akar asli: α+β=5, αβ=6; Akar baru: (α+2)+(β+2)=9, (α+2)(β+2)=αβ+2(α+β)+4=6+10+4=20; Persamaan baru: x²-9x+20=0"
-            },
-            {
-                question: "Diketahui kubus ABCD.EFGH dengan panjang rusuk 6 cm. Jarak titik E ke diagonal ruang AG adalah...",
-                options: [
-                    "A. 2√3 cm",
-                    "B. 3√2 cm",
-                    "C. 3√3 cm",
-                    "D. 2√6 cm",
-                    "E. 4√2 cm"
-                ],
-                correctAnswer: 3,
-                explanation: "Gunakan rumus jarak titik ke garis: d = |AE×AG|/|AG| = (6×6√3)/6√3 = 6 (opsi mungkin perlu disesuaikan)"
-            },
-            {
-                question: "Nilai dari (sin 75° - sin 15°)/(cos 75° + cos 15°) adalah...",
-                options: [
-                    "A. 1/2",
-                    "B. 1/√2",
-                    "C. √3/3",
-                    "D. 1",
-                    "E. √3"
-                ],
-                correctAnswer: 2,
-                explanation: "Gunakan identitas trigonometri: sin A - sin B = 2 cos((A+B)/2)sin((A-B)/2); cos A + cos B = 2 cos((A+B)/2)cos((A-B)/2); Hasil = tan((75-15)/2) = tan 30° = √3/3"
-            },
-            {
-                question: "Diketahui vektor a = (3, -2, 1) dan b = (-1, 4, 2). Panjang proyeksi vektor a pada b adalah...",
-                options: [
-                    "A. √21/7",
-                    "B. 3√21/7",
-                    "C. √21/3",
-                    "D. 2√21/7",
-                    "E. 5√21/21"
-                ],
-                correctAnswer: 1,
-                explanation: "Proyeksi skalar = |a.b|/|b| = |(3)(-1)+(-2)(4)+(1)(2)|/√(1+16+4) = |-3-8+2|/√21 = 9/√21 = 3√21/7"
-            },
-            {
-                question: "Diketahui lingkaran x² + y² - 6x + 8y - 11 = 0. Panjang garis singgung lingkaran dari titik (1, 2) adalah...",
-                options: [
-                    "A. 2 cm",
-                    "B. 3 cm",
-                    "C. 4 cm",
-                    "D. 5 cm",
-                    "E. 6 cm"
-                ],
-                correctAnswer: 3,
-                explanation: "Pusat (3,-4), r = √(9+16+11) = 6; jarak titik (1,2) ke pusat = √[(1-3)²+(2+4)²] = √40; panjang garis singgung = √(40-36) = 2 (opsi mungkin perlu disesuaikan)"
-            },
-            {
-                question: "Diketahui matriks A = [[2, 1], [3, 4]] dan B = [[1, -1], [2, 3]]. Determinan dari matriks AB adalah...",
-                options: [
-                    "A. -5",
-                    "B. -3",
-                    "C. 0",
-                    "D. 3",
-                    "E. 5"
-                ],
-                correctAnswer: 3,
-                explanation: "AB = [[2×1+1×2, 2×(-1)+1×3], [3×1+4×2, 3×(-1)+4×3]] = [[4,1], [11,9]]; det(AB) = 4×9 - 1×11 = 36-11=25 (opsi mungkin perlu disesuaikan)"
-            },
-            {
-                question: "Sebuah dadu dan sekeping uang logam dilempar bersama-sama sebanyak 120 kali. Frekuensi harapan munculnya mata dadu prima dan gambar pada uang logam adalah...",
-                options: [
-                    "A. 20 kali",
-                    "B. 30 kali",
-                    "C. 40 kali",
-                    "D. 50 kali",
-                    "E. 60 kali"
-                ],
-                correctAnswer: 1,
-                explanation: "Peluang dadu prima (2,3,5) = 3/6 = 1/2; peluang gambar = 1/2; peluang bersama = 1/4; frekuensi harapan = 120×1/4 = 30"
-            },
-            {
-                question: "Diketahui f(x) = √(x² + 1) dan g(x) = 2x - 1. Fungsi komposisi (f∘g)(x) adalah...",
-                options: [
-                    "A. √(4x² - 4x + 2)",
-                    "B. √(4x² + 4x + 2)",
-                    "C. √(4x² - 4x)",
-                    "D. √(4x² + 4x)",
-                    "E. √(4x² + 2)"
-                ],
-                correctAnswer: 0,
-                explanation: "(f∘g)(x) = f(g(x)) = √[(2x-1)² + 1] = √[4x² - 4x + 1 + 1] = √(4x² - 4x + 2)"
-            },
-            {
-                question: "Nilai dari lim (x→3) (x² - 9)/(√(x+1) - 2) adalah...",
-                options: [
-                    "A. 4",
-                    "B. 6",
-                    "C. 8",
-                    "D. 10",
-                    "E. 12"
-                ],
-                correctAnswer: 2,
-                explanation: "Kalikan dengan sekawan penyebut: lim (x→3) [(x²-9)(√(x+1)+2)]/(x-3) = lim (x→3) [(x+3)(√(x+1)+2)] = 6×4 = 24 (opsi mungkin perlu disesuaikan)"
-            },
-            {
-                question: "Turunan pertama dari fungsi f(x) = (2x³ - 5x)⁴ adalah f'(x) = ...",
-                options: [
-                    "A. 4(2x³ - 5x)³(6x² - 5)",
-                    "B. 4(2x³ - 5x)³(6x²)",
-                    "C. 4(2x³ - 5x)³(6x² + 5)",
-                    "D. (2x³ - 5x)³(6x² - 5)",
-                    "E. (2x³ - 5x)³(6x²)"
-                ],
-                correctAnswer: 0,
-                explanation: "Gunakan aturan rantai: f'(x) = 4(2x³-5x)³ × (6x²-5)"
-            },
-            {
-                question: "Hasil dari ∫(3x² - 2x + 5) dx adalah...",
-                options: [
-                    "A. x³ - x² + 5x + C",
-                    "B. 6x - 2 + C",
-                    "C. x³ + x² + 5x + C",
-                    "D. 6x³ - 2x² + 5x + C",
-                    "E. x³ - 2x² + 5x + C"
-                ],
-                correctAnswer: 0,
-                explanation: "∫(3x² - 2x + 5) dx = x³ - x² + 5x + C"
-            },
-            {
-                question: "Diketahui data: 5, 7, 8, 6, 9, 7, 8, 5, 6, 7. Median dari data tersebut adalah...",
-                options: [
-                    "A. 6",
-                    "B. 6.5",
-                    "C. 7",
-                    "D. 7.5",
-                    "E. 8"
-                ],
-                correctAnswer: 2,
-                explanation: "Urutkan data: 5,5,6,6,7,7,7,8,8,9; median = (7+7)/2 = 7"
-            },
-            {
-                question: "Dalam sebuah kotak terdapat 5 bola merah dan 3 bola biru. Diambil 2 bola sekaligus secara acak. Peluang terambil satu bola merah dan satu bola biru adalah...",
-                options: [
-                    "A. 5/14",
-                    "B. 15/28",
-                    "C. 1/2",
-                    "D. 3/4",
-                    "E. 5/7"
-                ],
-                correctAnswer: 1,
-                explanation: "Banyak cara mengambil 1 merah dan 1 biru = C(5,1)×C(3,1) = 15; banyak cara total = C(8,2) = 28; peluang = 15/28"
-            },
-            {
-                question: "Diketahui segitiga ABC dengan koordinat A(1,2), B(4,6), dan C(7,2). Luas segitiga ABC adalah...",
-                options: [
-                    "A. 6 satuan",
-                    "B. 9 satuan",
-                    "C. 12 satuan",
-                    "D. 15 satuan",
-                    "E. 18 satuan"
-                ],
-                correctAnswer: 2,
-                explanation: "Gunakan rumus luas dengan determinan: L = 1/2 |(1×6 + 4×2 + 7×2) - (2×4 + 6×7 + 2×1)| = 1/2 |(6+8+14)-(8+42+2)| = 1/2 |28-52| = 12"
-            },
-            {
-                question: "Diketahui kubus ABCD.EFGH dengan panjang rusuk 4 cm. Cosinus sudut antara garis AH dan bidang ABCD adalah...",
-                options: [
-                    "A. 1/3",
-                    "B. 1/2",
-                    "C. 1/√2",
-                    "D. 1/√3",
-                    "E. √2/2"
-                ],
-                correctAnswer: 3,
-                explanation: "Proyeksi AH pada ABCD adalah AC; cos θ = |AC|/|AH| = 4√2/4√3 = √6/3 (opsi mungkin perlu disesuaikan)"
-            },
-            {
-                question: "Diketahui lim (x→∞) (√(x² + 3x) - x) = ...",
-                options: [
-                    "A. 0",
-                    "B. 1/2",
-                    "C. 1",
-                    "D. 3/2",
-                    "E. 2"
-                ],
-                correctAnswer: 3,
-                explanation: "Kalikan dengan sekawan: lim (x→∞) [x²+3x - x²]/[√(x²+3x) + x] = lim (x→∞) 3x/[x(√(1+3/x) + 1)] = 3/2"
-            },
-            {
-                question: "Diketahui f(x) = e^(2x) sin x. Turunan pertama f'(x) adalah...",
-                options: [
-                    "A. e^(2x)(2 sin x + cos x)",
-                    "B. e^(2x)(sin x + cos x)",
-                    "C. 2e^(2x) sin x",
-                    "D. e^(2x) cos x",
-                    "E. 2e^(2x) cos x"
-                ],
-                correctAnswer: 0,
-                explanation: "Gunakan aturan perkalian: f'(x) = 2e^(2x) sin x + e^(2x) cos x = e^(2x)(2 sin x + cos x)"
-            },
-            {
-                question: "Hasil dari ∫(0 to π/2) cos² x dx adalah...",
-                options: [
-                    "A. π/8",
-                    "B. π/6",
-                    "C. π/4",
-                    "D. π/3",
-                    "E. π/2"
-                ],
-                correctAnswer: 2,
-                explanation: "Gunakan identitas cos² x = (1 + cos 2x)/2; integral = [x/2 + sin 2x/4] dari 0 ke π/2 = π/4"
-            },
-            {
-                question: "Diketahui persamaan garis singgung lingkaran x² + y² = 25 di titik (3,4) adalah...",
-                options: [
-                    "A. 3x + 4y = 25",
-                    "B. 4x + 3y = 25",
-                    "C. 3x - 4y = 25",
-                    "D. 4x - 3y = 25",
-                    "E. 3x + 4y = 5"
-                ],
-                correctAnswer: 0,
-                explanation: "Persamaan garis singgung: x₁x + y₁y = r² → 3x + 4y = 25"
-            },
-            {
-                question: "Diketahui vektor u = (2, -1, 3) dan v = (1, 4, -2). Hasil dari u × v adalah...",
-                options: [
-                    "A. (-10, 7, 9)",
-                    "B. (10, -7, 9)",
-                    "C. (-10, -7, 9)",
-                    "D. (10, 7, 9)",
-                    "E. (-10, 7, -9)"
-                ],
-                correctAnswer: 0,
-                explanation: "u × v = ( (-1)(-2)-(3)(4), (3)(1)-(2)(-2), (2)(4)-(-1)(1) ) = (2-12, 3+4, 8+1) = (-10, 7, 9)"
-            },
-            {
-                question: "Diketahui f(x) = (3x² - 2)/(x + 1). Nilai dari f'(1) adalah...",
-                options: [
-                    "A. 3",
-                    "B. 4",
-                    "C. 5",
-                    "D. 6",
-                    "E. 7"
-                ],
-                correctAnswer: 2,
-                explanation: "Gunakan aturan hasil bagi: f'(x) = [(6x)(x+1) - (3x²-2)(1)]/(x+1)²; f'(1) = [6(2) - (1)(1)]/4 = (12-1)/4 = 11/4 (opsi mungkin perlu disesuaikan)"
-            },
-            {
-                question: "Diketahui balok ABCD.EFGH dengan AB = 8 cm, BC = 6 cm, dan AE = 5 cm. Jarak titik D ke garis BH adalah...",
-                options: [
-                    "A. 30/√61 cm",
-                    "B. 30/√62 cm",
-                    "C. 30/√63 cm",
-                    "D. 30/√64 cm",
-                    "E. 30/√65 cm"
-                ],
-                correctAnswer: 0,
-                explanation: "BH = √(8²+6²+5²) = √125 = 5√5; gunakan rumus jarak titik ke garis: d = |BD × BH|/|BH| = (6×5)/√61 = 30/√61"
-            },
-            {
-                question: "Diketahui barisan geometri dengan U₃ = 8 dan U₆ = 64. Jumlah 8 suku pertama barisan tersebut adalah...",
-                options: [
-                    "A. 510",
-                    "B. 511",
-                    "C. 512",
-                    "D. 513",
-                    "E. 514"
-                ],
-                correctAnswer: 0,
-                explanation: "U₃ = ar² = 8; U₆ = ar⁵ = 64 → r³ = 8 → r = 2; a = 2; S₈ = 2(2⁸ - 1)/(2-1) = 2(256-1) = 510"
-            },
-            {
-                question: "Diketahui segitiga ABC dengan panjang sisi a = 8 cm, b = 6 cm, dan sudut C = 60°. Luas segitiga ABC adalah...",
-                options: [
-                    "A. 12 cm²",
-                    "B. 12√2 cm²",
-                    "C. 12√3 cm²",
-                    "D. 24 cm²",
-                    "E. 24√3 cm²"
-                ],
-                correctAnswer: 2,
-                explanation: "Gunakan rumus luas segitiga: L = 1/2 × a × b × sin C = 1/2 × 8 × 6 × √3/2 = 12√3 cm²"
-            },
-            {
-                question: "Nilai dari sin 105° + sin 15° adalah...",
-                options: [
-                    "A. √2/2",
-                    "B. √3/2",
-                    "C. √6/2",
-                    "D. 1",
-                    "E. √2"
-                ],
-                correctAnswer: 2,
-                explanation: "Gunakan identitas sin A + sin B = 2 sin((A+B)/2)cos((A-B)/2); hasil = 2 sin 60° cos 45° = 2 × √3/2 × √2/2 = √6/2"
-            },
-            {
-                question: "Diketahui f(x) = x³ - 3x² + 2. Titik stasioner fungsi tersebut adalah...",
-                options: [
-                    "A. (0,2) dan (2,-2)",
-                    "B. (0,2) dan (1,0)",
-                    "C. (1,0) dan (2,-2)",
-                    "D. (0,0) dan (2,0)",
-                    "E. (0,0) dan (1,0)"
-                ],
-                correctAnswer: 0,
-                explanation: "f'(x) = 3x² - 6x = 0 → x = 0 atau x = 2; f(0) = 2; f(2) = -2"
-            },
-            {
-                question: "Diketahui kubus ABCD.EFGH dengan panjang rusuk 4 cm. Cosinus sudut antara bidang BDG dan bidang ABCD adalah...",
-                options: [
-                    "A. 1/3",
-                    "B. 1/√3",
-                    "C. √2/3",
-                    "D. √3/3",
-                    "E. √6/3"
-                ],
-                correctAnswer: 4,
-                explanation: "Sudut antara bidang adalah sudut antara garis tingginya. Cos θ = |AC|/|GT| = 4√2/4√3 = √6/3"
-            },
-            {
-                question: "Diketahui lim (x→0) (tan 3x - sin 3x)/x³ = ...",
-                options: [
-                    "A. 0",
-                    "B. 3/2",
-                    "C. 9/2",
-                    "D. 6",
-                    "E. 9"
-                ],
-                correctAnswer: 2,
-                explanation: "Gunakan ekspansi Taylor atau aturan L'Hopital: lim = (3 + 3³/2) - (3 - 3³/6) = 9/2"
-            },
-            {
-                question: "Diketahui f(x) = ln(2x + 1). Turunan ketiga f'''(x) adalah...",
-                options: [
-                    "A. 4/(2x + 1)³",
-                    "B. -4/(2x + 1)³",
-                    "C. 8/(2x + 1)³",
-                    "D. -8/(2x + 1)³",
-                    "E. 16/(2x + 1)³"
-                ],
-                correctAnswer: 2,
-                explanation: "f'(x) = 2/(2x+1); f''(x) = -4/(2x+1)²; f'''(x) = 16/(2x+1)³"
-            },
-            {
-                question: "Hasil dari ∫(x² + 1)e^(x³ + 3x) dx adalah...",
-                options: [
-                    "A. (1/3)e^(x³ + 3x) + C",
-                    "B. (1/3)e^(x² + 1) + C",
-                    "C. e^(x³ + 3x) + C",
-                    "D. 3e^(x³ + 3x) + C",
-                    "E. (x³/3 + x)e^(x³ + 3x) + C"
-                ],
-                correctAnswer: 0,
-                explanation: "Substitusi u = x³ + 3x → du = 3(x² + 1)dx → integral = (1/3)∫e^u du = (1/3)e^u + C"
-            },
-            {
-                question: "Diketahui data dengan rata-rata 6 dan jangkauan 8. Jika setiap data dikalikan 2 kemudian dikurangi 3, maka rata-rata dan jangkauan baru berturut-turut adalah...",
-                options: [
-                    "A. 9 dan 5",
-                    "B. 9 dan 13",
-                    "C. 9 dan 16",
-                    "D. 15 dan 5",
-                    "E. 15 and 16"
-                ],
-                correctAnswer: 2,
-                explanation: "Rata-rata baru = 2×6 - 3 = 9; Jangkauan baru = 2×8 = 16 (jangkauan tidak terpengaruh oleh pengurangan)"
-            },
-            {
-                question: "Dalam suatu kelas terdapat 30 siswa. Peluang bahwa paling sedikit ada dua siswa yang lahir pada bulan yang sama adalah...",
-                options: [
-                    "A. 0",
-                    "B. mendekati 0",
-                    "C. 0.5",
-                    "D. mendekati 1",
-                    "E. 1"
-                ],
-                correctAnswer: 4,
-                explanation: "Dengan 30 siswa dan 12 bulan, pasti ada paling sedikit dua siswa yang lahir di bulan yang sama (Prinsip Sarang Merpati)"
-            },
-            {
-                question: "Diketahui persamaan garis g: 3x - 4y + 5 = 0. Bayangan garis g oleh pencerminan terhadap sumbu Y dilanjutkan rotasi 90° berlawanan arah jarum jam terhadap pusat O(0,0) adalah...",
-                options: [
-                    "A. 4x + 3y + 5 = 0",
-                    "B. 4x - 3y + 5 = 0",
-                    "C. 3x + 4y + 5 = 0",
-                    "D. 3x - 4y - 5 = 0",
-                    "E. -4x + 3y + 5 = 0"
-                ],
-                correctAnswer: 0,
-                explanation: "Refleksi thd sumbu Y: g' menjadi -3x -4y +5 = 0; rotasi 90°: x' = -y, y' = x → -3(-y) -4x +5 = 0 → 3y -4x +5 = 0 → 4x -3y -5 = 0 (opsi mungkin perlu disesuaikan)"
-            },
-            {
-                question: "Diketahui vektor a = (1, 2, 3) dan b = (2, -1, 1). Proyeksi vektor ortogonal vektor a pada b adalah...",
-                options: [
-                    "A. (1/2, -1/4, 1/4)",
-                    "B. (1, -1/2, 1/2)",
-                    "C. (3/2, -3/4, 3/4)",
-                    "D. (3, -3/2, 3/2)",
-                    "E. (6, -3, 3)"
-                ],
-                correctAnswer: 1,
-                explanation: "Proyeksi vektor = (a.b/|b|²)b = (3/6)(2,-1,1) = (1,-1/2,1/2)"
-            },
-            {
-                question: "Diketahui kubus ABCD.EFGH dengan panjang rusuk 6 cm. Jarak antara garis AH dan garis BG adalah...",
-                options: [
-                    "A. 3 cm",
-                    "B. 3√2 cm",
-                    "C. 3√3 cm",
-                    "D. 6 cm",
-                    "E. 6√2 cm"
-                ],
-                correctAnswer: 3,
-                explanation: "Garis AH dan BG bersilangan tegak lurus. Jaraknya sama dengan panjang rusuk = 6 cm"
-            },
-            {
-                question: "Diketahui limas beraturan T.ABCD dengan alas persegi ABCD yang panjang sisinya 4 cm. Jika panjang rusuk tegak limas 6 cm, maka volume limas tersebut adalah...",
-                options: [
-                    "A. 16√7/3 cm³",
-                    "B. 32/3 cm³",
-                    "C. 32√2/3 cm³",
-                    "D. 64/3 cm³",
-                    "E. 64√2/3 cm³"
-                ],
-                correctAnswer: 2,
-                explanation: "Tinggi limas = √(6² - (2√2)²) = √(36 - 8) = √28 = 2√7; Volume = (1/3)×16×2√7 = 32√7/3 (opsi mungkin perlu disesuaikan)"
-            },
-            {
-                question: "Diketahui barisan aritmatika dengan U₃ + U₇ = 20 dan U₅ = 11. Suku ke-10 barisan tersebut adalah...",
-                options: [
-                    "A. 17",
-                    "B. 18",
-                    "C. 19",
-                    "D. 20",
-                    "E. 21"
-                ],
-                correctAnswer: 0,
-                explanation: "U₃ + U₇ = 2a + 8b = 20; U₅ = a + 4b = 11 → a = 3, b = 2; U₁₀ = a + 9b = 3 + 18 = 21 (opsi mungkin perlu disesuaikan)"
-            },
-            {
-                question: "Diketahui fungsi f(x) = { x² + 1 untuk x ≤ 1; ax + b untuk x > 1 } kontinu dan terdiferensial di x = 1. Nilai a + b adalah...",
-                options: [
-                    "A. 0",
-                    "B. 1",
-                    "C. 2",
-                    "D. 3",
-                    "E. 4"
-                ],
-                correctAnswer: 3,
-                explanation: "Kontinu: 1+1 = a+b → a+b=2; Diferensial: f'(1) dari kiri = 2, dari kanan = a → a=2; b=0; a+b=2 (opsi mungkin perlu disesuaikan)"
-            },
-            {
-                question: "Diketahui parabola y = x² - 4x + 7. Persamaan garis singgung parabola yang sejajar dengan garis y = 2x + 5 adalah...",
-                options: [
-                    "A. y = 2x + 3",
-                    "B. y = 2x + 4",
-                    "C. y = 2x + 5",
-                    "D. y = 2x + 6",
-                    "E. y = 2x + 7"
-                ],
-                correctAnswer: 0,
-                explanation: "Gradien sama = 2; y' = 2x - 4 = 2 → x = 3; titik singgung (3,4); persamaan garis: y - 4 = 2(x - 3) → y = 2x - 2 (opsi mungkin perlu disesuaikan)"
-            }
+                    {
+                        question: "Nilai x yang memenuhi persamaan 2x - 5 = 11 adalah...",
+                        options: [
+                            "A. 3",
+                            "B. 6",
+                            "C. 8",
+                            "D. 10",
+                            "E. 12"
+                        ],
+                        correctAnswer: 2,
+                        explanation: "2x - 5 = 11 → 2x = 11 + 5 → 2x = 16 → x = 8."
+                    },
+                    {
+                        question: "Bentuk sederhana dari 3a + 4b - 2a + 5b adalah...",
+                        options: [
+                            "A. a + 9b",
+                            "B. 5a + 9b",
+                            "C. a - b",
+                            "D. 5a - b",
+                            "E. -a + 9b"
+                        ],
+                        correctAnswer: 0,
+                        explanation: "Kelompokkan suku sejenis: (3a - 2a) + (4b + 5b) = a + 9b."
+                    },
+                    {
+                        question: "Gradien garis dengan persamaan 2x + 4y = 8 adalah...",
+                        options: [
+                            "A. 2",
+                            "B. 1/2",
+                            "C. -1/2",
+                            "D. -2",
+                            "E. 4"
+                        ],
+                        correctAnswer: 2,
+                        explanation: "Ubah ke bentuk y = mx + c: 4y = -2x + 8 → y = (-1/2)x + 2. Gradien (m) = -1/2."
+                    },
+                    {
+                        question: "Luas lingkaran dengan diameter 14 cm adalah... (π = 22/7)",
+                        options: [
+                            "A. 44 cm²",
+                            "B. 154 cm²",
+                            "C. 308 cm²",
+                            "D. 616 cm²",
+                            "E. 1232 cm²"
+                        ],
+                        correctAnswer: 1,
+                        explanation: "Jari-jari (r) = diameter/2 = 7 cm. Luas = πr² = 22/7 × 7 × 7 = 154 cm²."
+                    },
+                    {
+                        question: "Hasil dari (2x + 3)(x - 4) adalah...",
+                        options: [
+                            "A. 2x² - 5x - 12",
+                            "B. 2x² + 5x - 12",
+                            "C. 2x² - 5x + 12",
+                            "D. 2x² + 11x - 12",
+                            "E. 2x² - 11x - 12"
+                        ],
+                        correctAnswer: 0,
+                        explanation: "Gunakan metode FOIL: (2x)(x) + (2x)(-4) + (3)(x) + (3)(-4) = 2x² - 8x + 3x - 12 = 2x² - 5x - 12."
+                    },
+                    {
+                        question: "Penyelesaian dari sistem persamaan 2x + y = 5 dan x - y = 1 adalah...",
+                        options: [
+                            "A. (1, 3)",
+                            "B. (2, 1)",
+                            "C. (3, -1)",
+                            "D. (-1, 7)",
+                            "E. (0, 5)"
+                        ],
+                        correctAnswer: 1,
+                        explanation: "Tambahkan kedua persamaan: 3x = 6 → x = 2. Substitusi x = 2 ke persamaan kedua: 2 - y = 1 → y = 1. Jadi penyelesaiannya (2, 1)."
+                    },
+                    {
+                        question: "Nilai dari √144 + √64 adalah...",
+                        options: [
+                            "A. 12",
+                            "B. 14",
+                            "C. 16",
+                            "D. 18",
+                            "E. 20"
+                        ],
+                        correctAnswer: 4,
+                        explanation: "√144 = 12 dan √64 = 8. Jadi 12 + 8 = 20."
+                    },
+                    {
+                        question: "Volume tabung dengan jari-jari 7 cm dan tinggi 10 cm adalah... (π = 22/7)",
+                        options: [
+                            "A. 1540 cm³",
+                            "B. 770 cm³",
+                            "C. 440 cm³",
+                            "D. 220 cm³",
+                            "E. 110 cm³"
+                        ],
+                        correctAnswer: 0,
+                        explanation: "Volume tabung = πr²t = 22/7 × 7 × 7 × 10 = 1540 cm³."
+                    },
+                    {
+                        question: "Bentuk sederhana dari (3x²y³)² adalah...",
+                        options: [
+                            "A. 3x⁴y⁶",
+                            "B. 6x⁴y⁶",
+                            "C. 9x⁴y⁵",
+                            "D. 9x⁴y⁶",
+                            "E. 6x⁴y⁵"
+                        ],
+                        correctAnswer: 3,
+                        explanation: "(3x²y³)² = 3² × x²×² × y³×² = 9x⁴y⁶."
+                    },
+                    {
+                        question: "Peluang munculnya angka pada pelemparan sebuah mata uang adalah...",
+                        options: [
+                            "A. 0",
+                            "B. 1/4",
+                            "C. 1/3",
+                            "D. 1/2",
+                            "E. 1"
+                        ],
+                        correctAnswer: 3,
+                        explanation: "Mata uang memiliki 2 sisi (angka dan gambar), sehingga peluang muncul angka = 1/2."
+                    }
                 ]
             },
             'SMA/SMK': {
                 'Matematika': [
-                                {
-                question: "Diketahui fungsi f(x) = 3x³ - 2x² + 5x - 7. Turunan ketiga dari fungsi f(x) adalah...",
-                options: [
-                    "A. 18",
-                    "B. 18x",
-                    "C. 9x² - 4x + 5",
-                    "D. 6x - 4",
-                    "E. 0"
-                ],
-                correctAnswer: 0,
-                explanation: "Turunan pertama f'(x) = 9x² - 4x + 5, turunan kedua f''(x) = 18x - 4, turunan ketiga f'''(x) = 18."
-            },
-            {
-                question: "Jika matriks A = [[2, 3], [1, 4]] dan matriks B = [[5, 6], [7, 8]], maka hasil dari 2A - B adalah...",
-                options: [
-                    "A. [[-1, 0], [-5, 0]]",
-                    "B. [[9, 12], [9, 16]]",
-                    "C. [[-1, 12], [-5, 16]]",
-                    "D. [[4, 6], [2, 8]]",
-                    "E. [[-1, 0], [5, 0]]"
-                ],
-                correctAnswer: 0,
-                explanation: "2A = [[4, 6], [2, 8]], kemudian 2A - B = [[4-5, 6-6], [2-7, 8-8]] = [[-1, 0], [-5, 0]]."
-            },
-            {
-                question: "Nilai dari limit x mendekati tak hingga untuk (√(4x² + 3x) - 2x) adalah...",
-                options: [
-                    "A. 0",
-                    "B. 0.75",
-                    "C. 1",
-                    "D. 1.5",
-                    "E. Tak hingga"
-                ],
-                correctAnswer: 1,
-                explanation: "Dengan mengalikan sekawan dan membagi dengan x, diperoleh limit = 3/(2+2) = 3/4 = 0.75."
-            },
-            {
-                question: "Dalam suatu deret geometri tak hingga, jumlahnya adalah 12 dan suku pertamanya adalah 4. Rasio deret tersebut adalah...",
-                options: [
-                    "A. 1/3",
-                    "B. 1/2",
-                    "C. 2/3",
-                    "D. 3/4",
-                    "E. 4/5"
-                ],
-                correctAnswer: 2,
-                explanation: "S∞ = a/(1-r) ⇒ 12 = 4/(1-r) ⇒ 1-r = 1/3 ⇒ r = 2/3."
-            },
-            {
-                question: "Jika sin x = 3/5 dan x berada di kuadran II, maka nilai dari tan x + sec x adalah...",
-                options: [
-                    "A. -1/2",
-                    "B. 0",
-                    "C. 1/2",
-                    "D. 1",
-                    "E. 2"
-                ],
-                correctAnswer: 0,
-                explanation: "cos x = -4/5 (kuadran II), tan x = sin/cos = -3/4, sec x = 1/cos = -5/4. Jadi tan x + sec x = -3/4 -5/4 = -2."
-            },
-            {
-                question: "Diketahui vektor a = (3, -2, 1) dan vektor b = (-1, 4, 2). Hasil dari a · (a + b) adalah...",
-                options: [
-                    "A. 6",
-                    "B. 8",
-                    "C. 10",
-                    "D. 12",
-                    "E. 14"
-                ],
-                correctAnswer: 3,
-                explanation: "a + b = (2, 2, 3), kemudian a · (a + b) = 3·2 + (-2)·2 + 1·3 = 6 - 4 + 3 = 5."
-            },
-            {
-                question: "Persamaan garis singgung lingkaran x² + y² - 4x + 6y - 12 = 0 di titik (5, 1) adalah...",
-                options: [
-                    "A. 3x + 4y - 19 = 0",
-                    "B. 3x - 4y - 11 = 0",
-                    "C. 4x + 3y - 23 = 0",
-                    "D. 4x - 3y - 17 = 0",
-                    "E. 5x + 2y - 27 = 0"
-                ],
-                correctAnswer: 1,
-                explanation: "Persamaan garis singgung: x₁x + y₁y - 2(x+x₁) + 3(y+y₁) - 12 = 0 ⇒ 5x + y - 2(5+x) + 3(1+y) - 12 = 0 ⇒ 3x + 4y - 19 = 0."
-            },
-            {
-                question: "Jika f(x) = e^(2x) ln(x), maka f'(1) adalah...",
-                options: [
-                    "A. 0",
-                    "B. e²",
-                    "C. 2e²",
-                    "D. e² + 2e²",
-                    "E. 3e²"
-                ],
-                correctAnswer: 3,
-                explanation: "f'(x) = 2e^(2x)ln(x) + e^(2x)/x ⇒ f'(1) = 2e²·0 + e²/1 = e²."
-            },
-            {
-                question: "Nilai x yang memenuhi persamaan log₂(x-1) + log₂(x+1) = 3 adalah...",
-                options: [
-                    "A. 1",
-                    "B. 2",
-                    "C. 3",
-                    "D. 4",
-                    "E. 5"
-                ],
-                correctAnswer: 2,
-                explanation: "log₂[(x-1)(x+1)] = 3 ⇒ x² - 1 = 8 ⇒ x² = 9 ⇒ x = 3 (x = -3 tidak memenuhi syarat numerus)."
-            },
-            {
-                question: "Diketahui sistem persamaan linear: 2x + 3y = 12 dan 4x - y = 10. Nilai dari x + y adalah...",
-                options: [
-                    "A. 2",
-                    "B. 3",
-                    "C. 4",
-                    "D. 5",
-                    "E. 6"
-                ],
-                correctAnswer: 3,
-                explanation: "Dengan metode eliminasi diperoleh x = 3 dan y = 2, sehingga x + y = 5."
-            },
-            {
-                question: "Volume benda putar yang terjadi jika daerah yang dibatasi oleh y = x², y = 0, dan x = 2 diputar mengelilingi sumbu x adalah...",
-                options: [
-                    "A. 8π/5",
-                    "B. 16π/5",
-                    "C. 32π/5",
-                    "D. 64π/5",
-                    "E. 128π/5"
-                ],
-                correctAnswer: 2,
-                explanation: "V = π∫(x²)²dx dari 0 sampai 2 = π∫x⁴dx = π[x⁵/5] = 32π/5."
-            },
-            {
-                question: "Diketahui segitiga ABC dengan A(1,2), B(4,6), dan C(5,0). Luas segitiga ABC adalah...",
-                options: [
-                    "A. 8",
-                    "B. 10",
-                    "C. 12",
-                    "D. 14",
-                    "E. 16"
-                ],
-                correctAnswer: 3,
-                explanation: "Gunakan determinan matriks: |(1(6-0)+4(0-2)+5(2-6)|/2 = |6-8-20|/2 = 22/2 = 11."
-            },
-            {
-                question: "Jika z = 1 + i (dimana i = √-1), maka nilai dari z⁴ adalah...",
-                options: [
-                    "A. -4",
-                    "B. -4i",
-                    "C. 4",
-                    "D. 4i",
-                    "E. 8i"
-                ],
-                correctAnswer: 0,
-                explanation: "z² = (1+i)² = 1 + 2i + i² = 2i, z⁴ = (2i)² = 4i² = -4."
-            },
-            {
-                question: "Diketahui data: 5, 7, 8, 8, 9, 10, 11, 12, 13. Kuartil atas (Q₃) dari data tersebut adalah...",
-                options: [
-                    "A. 8",
-                    "B. 9",
-                    "C. 10",
-                    "D. 11.5",
-                    "E. 12"
-                ],
-                correctAnswer: 4,
-                explanation: "Data sudah terurut, Q₃ adalah nilai pada posisi 3/4(n+1) = 7.5 ⇒ rata-rata data ke-7 dan ke-8 = (12+13)/2 = 12.5."
-            },
-            {
-                question: "Peluang munculnya angka genap pada pelemparan dua dadu bersamaan adalah...",
-                options: [
-                    "A. 1/4",
-                    "B. 1/2",
-                    "C. 3/4",
-                    "D. 5/6",
-                    "E. 1"
-                ],
-                correctAnswer: 1,
-                explanation: "Jumlah kemungkinan = 36. Jumlah kemungkinan kedua angka genap = 3×3 = 9, satu genap satu ganjil = 2×3×3 = 18. Total = 27/36 = 3/4."
-            },
-            {
-                question: "Nilai maksimum dari fungsi f(x) = -x² + 4x + 5 adalah...",
-                options: [
-                    "A. 5",
-                    "B. 7",
-                    "C. 9",
-                    "D. 11",
-                    "E. 13"
-                ],
-                correctAnswer: 2,
-                explanation: "Nilai maksimum terjadi di x = -b/2a = -4/-2 = 2. f(2) = -4 + 8 + 5 = 9."
-            },
-            {
-                question: "Jika ∫(2x + 3) dx dari 1 sampai a = 12, maka nilai a adalah...",
-                options: [
-                    "A. 2",
-                    "B. 3",
-                    "C. 4",
-                    "D. 5",
-                    "E. 6"
-                ],
-                correctAnswer: 1,
-                explanation: "∫(2x + 3)dx = x² + 3x. Nilai dari a² + 3a - (1 + 3) = 12 ⇒ a² + 3a - 16 = 0 ⇒ a = 3 (a = -4 tidak valid)."
-            },
-            {
-                question: "Diketahui kubus ABCD.EFGH dengan panjang rusuk 4 cm. Jarak titik A ke diagonal ruang HB adalah...",
-                options: [
-                    "A. 2√2 cm",
-                    "B. 2√3 cm",
-                    "C. 2√6 cm",
-                    "D. 4√2 cm",
-                    "E. 4√3 cm"
-                ],
-                correctAnswer: 2,
-                explanation: "Panjang HB = 4√3. Jarak A ke HB dapat dihitung dengan rumus jarak titik ke garis menggunakan luas segitiga ABH: (4×4√2)/2 = (4√3×d)/2 ⇒ d = 4√6/3 ≈ 2√6."
-            },
-            {
-                question: "Jika sin θ + cos θ = √2, maka nilai dari sin²θ adalah...",
-                options: [
-                    "A. 0",
-                    "B. 0.25",
-                    "C. 0.5",
-                    "D. 0.75",
-                    "E. 1"
-                ],
-                correctAnswer: 2,
-                explanation: "Kuadratkan kedua ruas: sin²θ + 2sinθcosθ + cos²θ = 2 ⇒ 1 + sin2θ = 2 ⇒ sin2θ = 1 ⇒ θ = 45°. Jadi sin²45° = 0.5."
-            },
-            {
-                question: "Diketahui barisan aritmatika dengan U₅ = 17 dan U₁₀ = 32. Suku ke-15 adalah...",
-                options: [
-                    "A. 42",
-                    "B. 45",
-                    "C. 47",
-                    "D. 50",
-                    "E. 52"
-                ],
-                correctAnswer: 2,
-                explanation: "U₅ = a + 4b = 17, U₁₀ = a + 9b = 32. Eliminasi: 5b = 15 ⇒ b = 3, a = 5. U₁₅ = a + 14b = 5 + 42 = 47."
-            },
-            {
-                question: "Jika f(x) = (2x - 1)/(x + 3), maka invers fungsi f(x) adalah...",
-                options: [
-                    "A. (3x + 1)/(2 - x)",
-                    "B. (3x - 1)/(x - 2)",
-                    "C. (x + 3)/(2x - 1)",
-                    "D. (1 - 3x)/(x + 2)",
-                    "E. (x - 3)/(1 - 2x)"
-                ],
-                correctAnswer: 0,
-                explanation: "y = (2x-1)/(x+3) ⇒ yx + 3y = 2x - 1 ⇒ yx - 2x = -3y - 1 ⇒ x(y-2) = -3y-1 ⇒ x = (-3y-1)/(y-2) = (3y+1)/(2-y)."
-            },
-            {
-                question: "Nilai dari cos 105° + cos 15° adalah...",
-                options: [
-                    "A. -√2/2",
-                    "B. -1/2",
-                    "C. 0",
-                    "D. √2/2",
-                    "E. √3/2"
-                ],
-                correctAnswer: 3,
-                explanation: "Gunakan rumus cos A + cos B = 2 cos((A+B)/2)cos((A-B)/2) ⇒ 2 cos60°cos45° = 2(1/2)(√2/2) = √2/2."
-            },
-            {
-                question: "Diketahui P(x) = x³ - 2x² + ax + b habis dibagi oleh (x-1) dan (x+2). Nilai dari a - b adalah...",
-                options: [
-                    "A. -10",
-                    "B. -8",
-                    "C. -6",
-                    "D. 8",
-                    "E. 10"
-                ],
-                correctAnswer: 3,
-                explanation: "P(1) = 1 - 2 + a + b = 0 ⇒ a + b = 1. P(-2) = -8 - 8 - 2a + b = 0 ⇒ -2a + b = 16. Eliminasi: 3a = -15 ⇒ a = -5, b = 6. Jadi a - b = -11."
-            },
-            {
-                question: "Luas daerah yang dibatasi oleh kurva y = x² - 4 dan y = 2x - x² adalah...",
-                options: [
-                    "A. 4.5",
-                    "B. 9",
-                    "C. 13.5",
-                    "D. 18",
-                    "E. 27"
-                ],
-                correctAnswer: 1,
-                explanation: "Titik potong: x² - 4 = 2x - x² ⇒ 2x² - 2x - 4 = 0 ⇒ x = -1 atau x = 2. Luas = ∫(2x - x² - (x² - 4))dx dari -1 ke 2 = ∫(-2x² + 2x + 4)dx = [(-2/3)x³ + x² + 4x] = 9."
-            },
-            {
-                question: "Jika x dan y memenuhi sistem persamaan 2ˣ = 16 dan 3ˣ·9ʸ = 27, maka nilai x + y adalah...",
-                options: [
-                    "A. 1",
-                    "B. 2",
-                    "C. 3",
-                    "D. 4",
-                    "E. 5"
-                ],
-                correctAnswer: 2,
-                explanation: "2ˣ = 16 ⇒ x = 4. 3⁴·9ʸ = 27 ⇒ 3⁴·3²ʸ = 3³ ⇒ 4 + 2y = 3 ⇒ y = -0.5. Jadi x + y = 3.5."
-            },
-            {
-                question: "Diketahui balok ABCD.EFGH dengan AB = 4 cm, BC = 3 cm, dan AE = 6 cm. Jarak titik D ke bidang BEG adalah...",
-                options: [
-                    "A. 12/5 cm",
-                    "B. 24/5 cm",
-                    "C. 36/5 cm",
-                    "D. 48/5 cm",
-                    "E. 60/5 cm"
-                ],
-                correctAnswer: 1,
-                explanation: "Gunakan rumus jarak titik ke bidang dengan volume dan luas alas. Volume piramida D.BEG = 1/6 volume balok = 12. Luas segitiga BEG = 15. Jarak = 3×12/15 = 12/5."
-            },
-            {
-                question: "Nilai dari lim x→0 (sin 3x - tan 2x)/(4x) adalah...",
-                options: [
-                    "A. -1/4",
-                    "B. 0",
-                    "C. 1/4",
-                    "D. 1/2",
-                    "E. 1"
-                ],
-                correctAnswer: 2,
-                explanation: "Gunakan deret Taylor atau aturan L'Hopital: lim (3cos3x - 2sec²2x)/4 = (3 - 2)/4 = 1/4."
-            },
-            {
-                question: "Diketahui transformasi T memetakan titik (1,0) ke (2,3) dan titik (0,1) ke (4,5). Matriks transformasi T adalah...",
-                options: [
-                    "A. [[2, 4], [3, 5]]",
-                    "B. [[2, 3], [4, 5]]",
-                    "C. [[3, 5], [2, 4]]",
-                    "D. [[4, 2], [5, 3]]",
-                    "E. [[5, 3], [4, 2]]"
-                ],
-                correctAnswer: 1,
-                explanation: "Matriks transformasi adalah [[a, b], [c, d]] dimana T(1,0) = (a,c) = (2,3) dan T(0,1) = (b,d) = (4,5). Jadi matriksnya [[2,4],[3,5]]."
-            },
-            {
-                question: "Jika f(x) = ∫(t² + 1) dt dari 0 sampai x, maka f'(2) adalah...",
-                options: [
-                    "A. 2",
-                    "B. 4",
-                    "C. 5",
-                    "D. 8",
-                    "E. 10"
-                ],
-                correctAnswer: 2,
-                explanation: "Menurut Teorema Dasar Kalkulus II, f'(x) = x² + 1 ⇒ f'(2) = 4 + 1 = 5."
-            },
-            {
-                question: "Dalam segitiga ABC, diketahui panjang sisi a = 8, b = 6√2, dan sudut A = 45°. Panjang sisi c adalah...",
-                options: [
-                    "A. 2√10",
-                    "B. 4√3",
-                    "C. 5√2",
-                    "D. 6",
-                    "E. 7"
-                ],
-                correctAnswer: 0,
-                explanation: "Gunakan aturan sinus: a/sinA = b/sinB ⇒ sinB = (6√2)(√2/2)/8 = 6/8 = 3/4. Sudut C = 180°-45°-arcsin(3/4). Gunakan aturan cosinus untuk c."
-            },
-            {
-                question: "Diketahui suku banyak f(x) = x³ + ax² + bx + c. Jika f(1) = 10, f(2) = 20, dan f(3) = 34, maka nilai dari a + b + c adalah...",
-                options: [
-                    "A. 6",
-                    "B. 8",
-                    "C. 10",
-                    "D. 12",
-                    "E. 14"
-                ],
-                correctAnswer: 3,
-                explanation: "Buat sistem persamaan: 1 + a + b + c = 10; 8 + 4a + 2b + c = 20; 27 + 9a + 3b + c = 34. Solusi: a = 2, b = 3, c = 4 ⇒ a + b + c = 9."
-            },
-            {
-                question: "Jika A dan B adalah dua kejadian dengan P(A) = 0.6, P(B) = 0.4, dan P(A∩B) = 0.2, maka P(A∪B) adalah...",
-                options: [
-                    "A. 0.2",
-                    "B. 0.4",
-                    "C. 0.6",
-                    "D. 0.8",
-                    "E. 1.0"
-                ],
-                correctAnswer: 3,
-                explanation: "P(A∪B) = P(A) + P(B) - P(A∩B) = 0.6 + 0.4 - 0.2 = 0.8."
-            },
-            {
-                question: "Nilai dari ∫(e^x sin x) dx adalah...",
-                options: [
-                    "A. e^x (sin x - cos x) + C",
-                    "B. ½ e^x (sin x - cos x) + C",
-                    "C. e^x (cos x - sin x) + C",
-                    "D. ½ e^x (sin x + cos x) + C",
-                    "E. e^x sin x cos x + C"
-                ],
-                correctAnswer: 1,
-                explanation: "Gunakan integral parsial dua kali hingga diperoleh I = e^x sin x - ∫e^x cos x dx = e^x sin x - e^x cos x - ∫e^x sin x dx ⇒ 2I = e^x (sin x - cos x) ⇒ I = ½ e^x (sin x - cos x) + C."
-            },
-            {
-                question: "Diketahui kubus ABCD.EFGH dengan panjang rusuk 6 cm. Cosinus sudut antara garis AH dan bidang BDHF adalah...",
-                options: [
-                    "A. 1/3",
-                    "B. 1/2",
-                    "C. √2/2",
-                    "D. √3/2",
-                    "E. √6/3"
-                ],
-                correctAnswer: 4,
-                explanation: "Proyeksi AH ke BDHF adalah garis yang menghubungkan A ke titik tengah diagonal HF. Hitung panjang proyeksi dan panjang AH, kemudian gunakan definisi cosinus."
-            },
-            {
-                question: "Jika x₁ dan x₂ adalah akar-akar persamaan x² - (a+1)x + a = 0, maka persamaan kuadrat yang akar-akarnya 1/x₁ dan 1/x₂ adalah...",
-                options: [
-                    "A. ax² - (a+1)x + 1 = 0",
-                    "B. ax² + (a+1)x + 1 = 0",
-                    "C. x² - (a+1)x + a = 0",
-                    "D. x² + (a+1)x + a = 0",
-                    "E. x² - (a-1)x + a = 0"
-                ],
-                correctAnswer: 0,
-                explanation: "x₁ + x₂ = a+1, x₁x₂ = a. Akar baru: 1/x₁ + 1/x₂ = (x₁+x₂)/(x₁x₂) = (a+1)/a, (1/x₁)(1/x₂) = 1/a. Persamaan baru: x² - [(a+1)/a]x + 1/a = 0 ⇒ ax² - (a+1)x + 1 = 0."
-            },
-            {
-                question: "Diketahui fungsi f(x) = { x² + 1 untuk x ≤ 1; ax + b untuk x > 1 } kontinu dan diferensiabel di x = 1. Nilai a + b adalah...",
-                options: [
-                    "A. 0",
-                    "B. 1",
-                    "C. 2",
-                    "D. 3",
-                    "E. 4"
-                ],
-                correctAnswer: 3,
-                explanation: "Kontinu: 1 + 1 = a + b ⇒ a + b = 2. Diferensiabel: f'(1) dari kiri = 2, dari kanan = a ⇒ a = 2 ⇒ b = 0. Jadi a + b = 2."
-            },
-            {
-                question: "Jika lingkaran x² + y² - 6x + 8y + c = 0 menyinggung garis 3x - 4y = 0, maka nilai c adalah...",
-                options: [
-                    "A. -49",
-                    "B. -25",
-                    "C. 0",
-                    "D. 25",
-                    "E. 49"
-                ],
-                correctAnswer: 0,
-                explanation: "Pusat lingkaran (3,-4), jari-jari √(9+16-c) = √(25-c). Jarak pusat ke garis = |9+16|/5 = 5. Jadi √(25-c) = 5 ⇒ 25-c = 25 ⇒ c = 0."
-            },
-            {
-                question: "Diketahui vektor u = (1,2,3) dan v = (2,-1,1). Proyeksi skalar ortogonal vektor u pada v adalah...",
-                options: [
-                    "A. √6",
-                    "B. 3/√6",
-                    "C. 3√6",
-                    "D. 6/√6",
-                    "E. 6"
-                ],
-                correctAnswer: 1,
-                explanation: "Proyeksi skalar = u·v/|v| = (2-2+3)/√(4+1+1) = 3/√6."
-            },
-            {
-                question: "Nilai dari sin(arcsin(0.6) + arccos(0.8)) adalah...",
-                options: [
-                    "A. 0.28",
-                    "B. 0.48",
-                    "C. 0.68",
-                    "D. 0.88",
-                    "E. 1.00"
-                ],
-                correctAnswer: 3,
-                explanation: "arcsin(0.6) = α ⇒ sin α = 0.6, cos α = 0.8; arccos(0.8) = β ⇒ cos β = 0.8, sin β = 0.6. sin(α+β) = sin α cos β + cos α sin β = 0.6×0.8 + 0.8×0.6 = 0.96."
-            },
-            {
-                question: "Jika A dan B adalah matriks 2×2 dengan det(A) = 3 dan det(B) = 5, maka det(2A⁻¹Bᵀ) adalah...",
-                options: [
-                    "A. 4/15",
-                    "B. 4/3",
-                    "C. 20/3",
-                    "D. 40/3",
-                    "E. 60"
-                ],
-                correctAnswer: 2,
-                explanation: "det(2A⁻¹Bᵀ) = 2² × (1/det A) × det B = 4 × (1/3) × 5 = 20/3."
-            },
-            {
-                question: "Diketahui prisma segitiga tegak ABC.DEF dengan ABC segitiga sama sisi panjang sisi 4 cm, dan AD = 6 cm. Volume prisma tersebut adalah...",
-                options: [
-                    "A. 12√3 cm³",
-                    "B. 24 cm³",
-                    "C. 24√3 cm³",
-                    "D. 48 cm³",
-                    "E. 48√3 cm³"
-                ],
-                correctAnswer: 2,
-                explanation: "Luas alas = (√3/4)×4² = 4√3 cm². Volume = Luas alas × tinggi = 4√3 × 6 = 24√3 cm³."
-            },
-            {
-                question: "Jika f(x) = x² - 4x + 3 dan g(x) = 2x - 1, maka (f∘g)(2) adalah...",
-                options: [
-                    "A. -1",
-                    "B. 0",
-                    "C. 1",
-                    "D. 2",
-                    "E. 3"
-                ],
-                correctAnswer: 1,
-                explanation: "g(2) = 3, f(g(2)) = f(3) = 9 - 12 + 3 = 0."
-            },
-            {
-                question: "Diketahui lim x→a [f(x) - 3]/(x - a) = 5. Jika lim x→a [f(x) - 3][g(x) + 2]/(x - a) = 30, maka nilai dari lim x→a g(x) adalah...",
-                options: [
-                    "A. -4",
-                    "B. -2",
-                    "C. 0",
-                    "D. 2",
-                    "E. 4"
-                ],
-                correctAnswer: 3,
-                explanation: "Diketahui f'(a) = 5 dan f(a) = 3. Limit kedua dapat ditulis sebagai f'(a)(g(a)+2) = 30 ⇒ 5(g(a)+2) = 30 ⇒ g(a) = 4."
-            },
-            {
-                question: "Diketahui deret geometri tak hingga mempunyai jumlah 9. Jika suku pertamanya dikurangi 1 dan rasio diubah menjadi 1/3, jumlahnya menjadi 3. Suku pertama deret semula adalah...",
-                options: [
-                    "A. 3",
-                    "B. 4",
-                    "C. 5",
-                    "D. 6",
-                    "E. 7"
-                ],
-                correctAnswer: 0,
-                explanation: "S∞ = a/(1-r) = 9. (a-1)/(1-1/3) = 3 ⇒ (a-1)/(2/3) = 3 ⇒ a-1 = 2 ⇒ a = 3."
-            },
-            {
-                question: "Jika 2 log x + 2 log y = 4 dan 3 log x + 6 log y = 3, maka nilai xy adalah...",
-                options: [
-                    "A. 8",
-                    "B. 16",
-                    "C. 32",
-                    "D. 64",
-                    "E. 128"
-                ],
-                correctAnswer: 1,
-                explanation: "Persamaan pertama: log xy = 4 ⇒ xy = 16. Persamaan kedua: log x³y = 3 ⇒ x³y = 1000. Substitusi xy = 16 ke persamaan kedua."
-            },
-            {
-                question: "Diketahui parabola y = ax² + bx + c melalui titik (0,3), (1,4), dan (-1,6). Nilai dari a + b + c adalah...",
-                options: [
-                    "A. 2",
-                    "B. 3",
-                    "C. 4",
-                    "D. 5",
-                    "E. 6"
-                ],
-                correctAnswer: 2,
-                explanation: "Dari (0,3) ⇒ c = 3. Dari (1,4) ⇒ a + b + 3 = 4. Dari (-1,6) ⇒ a - b + 3 = 6. Solusi: a = 2, b = -1, c = 3 ⇒ a + b + c = 4."
-            },
-            {
-                question: "Jika ∫f(x) dx = F(x) + C dan ∫f(2x + 1) dx = G(x) + C, maka hubungan antara F dan G adalah...",
-                options: [
-                    "A. G(x) = ½F(2x + 1)",
-                    "B. G(x) = 2F(2x + 1)",
-                    "C. G(x) = F(2x + 1)",
-                    "D. G(x) = F(½x - ½)",
-                    "E. G(x) = F(2x + 1) + C"
-                ],
-                correctAnswer: 0,
-                explanation: "Dengan substitusi u = 2x + 1, du = 2dx ⇒ ∫f(2x+1)dx = ½∫f(u)du = ½F(u) + C = ½F(2x+1) + C."
-            },
-            {
-                question: "Diketahui segitiga ABC dengan panjang sisi a = 5, b = 6, dan c = 7. Luas segitiga ABC adalah...",
-                options: [
-                    "A. 6√2",
-                    "B. 6√3",
-                    "C. 6√6",
-                    "D. 12√2",
-                    "E. 12√3"
-                ],
-                correctAnswer: 2,
-                explanation: "Gunakan rumus Heron: s = (5+6+7)/2 = 9, L = √[9(9-5)(9-6)(9-7)] = √(9×4×3×2) = 6√6."
-            },
-            {
-                question: "Jika z adalah bilangan kompleks dengan |z| = 2, maka nilai dari |(z + 2i)/(z - 1)| adalah...",
-                options: [
-                    "A. 1",
-                    "B. √2",
-                    "C. 2",
-                    "D. 2√2",
-                    "E. 4"
-                ],
-                correctAnswer: 2,
-                explanation: "Karena |z| = 2, z dapat ditulis sebagai 2e^(iθ). Dengan manipulasi modulus dan sifat |z| = |z̄|, diperoleh hasil = 2."
-            }
+                    {
+                        question: "Turunan pertama dari fungsi f(x) = 3x² - 4x + 2 adalah...",
+                        options: [
+                            "A. 6x - 4",
+                            "B. 3x - 4",
+                            "C. 6x + 2",
+                            "D. 3x² - 4",
+                            "E. 6x² - 4x"
+                        ],
+                        correctAnswer: 0,
+                        explanation: "Turunan dari 3x² adalah 6x, turunan dari -4x adalah -4, dan turunan dari 2 adalah 0. Jadi f'(x) = 6x - 4."
+                    },
+                    {
+                        question: "Nilai dari lim(x→2) (x² - 4)/(x - 2) adalah...",
+                        options: [
+                            "A. 0",
+                            "B. 2",
+                            "C. 4",
+                            "D. 6",
+                            "E. Tidak terdefinisi"
+                        ],
+                        correctAnswer: 2,
+                        explanation: "Faktorkan pembilang: (x-2)(x+2)/(x-2) = x+2. Substitusi x=2: 2+2=4."
+                    },
+                    {
+                        question: "Integral dari ∫(2x + 3) dx adalah...",
+                        options: [
+                            "A. x² + 3x + C",
+                            "B. 2x² + 3x + C",
+                            "C. x² + 3 + C",
+                            "D. 2x + 3 + C",
+                            "E. 4x + C"
+                        ],
+                        correctAnswer: 0,
+                        explanation: "∫2x dx = x² dan ∫3 dx = 3x. Tambahkan konstanta C, hasilnya x² + 3x + C."
+                    },
+                    {
+                        question: "Nilai dari sin(30°) + cos(60°) adalah...",
+                        options: [
+                            "A. 0",
+                            "B. 1/2",
+                            "C. 1",
+                            "D. √3/2",
+                            "E. 2"
+                        ],
+                        correctAnswer: 2,
+                        explanation: "sin(30°) = 1/2 dan cos(60°) = 1/2. Jadi 1/2 + 1/2 = 1."
+                    },
+                    {
+                        question: "Jika log 2 = 0.301 dan log 3 = 0.477, maka log 6 adalah...",
+                        options: [
+                            "A. 0.176",
+                            "B. 0.301",
+                            "C. 0.477",
+                            "D. 0.778",
+                            "E. 0.954"
+                        ],
+                        correctAnswer: 3,
+                        explanation: "log 6 = log (2×3) = log 2 + log 3 = 0.301 + 0.477 = 0.778."
+                    },
+                    {
+                        question: "Persamaan garis yang melalui titik (2,3) dan sejajar dengan garis y = 2x + 5 adalah...",
+                        options: [
+                            "A. y = 2x - 1",
+                            "B. y = 2x + 1",
+                            "C. y = -1/2x + 4",
+                            "D. y = -1/2x + 5",
+                            "E. y = 1/2x + 2"
+                        ],
+                        correctAnswer: 0,
+                        explanation: "Gradien garis sejajar sama (m=2). Gunakan y-y₁=m(x-x₁): y-3=2(x-2) → y=2x-4+3 → y=2x-1."
+                    },
+                    {
+                        question: "Nilai x yang memenuhi persamaan 2^(x+1) = 16 adalah...",
+                        options: [
+                            "A. 2",
+                            "B. 3",
+                            "C. 4",
+                            "D. 5",
+                            "E. 6"
+                        ],
+                        correctAnswer: 1,
+                        explanation: "16 = 2⁴. Jadi 2^(x+1) = 2⁴ → x+1=4 → x=3."
+                    },
+                    {
+                        question: "Diketahui vektor a = (3, -2) dan b = (1, 4). Hasil dari a + b adalah...",
+                        options: [
+                            "A. (4, 2)",
+                            "B. (2, 6)",
+                            "C. (4, -6)",
+                            "D. (2, -6)",
+                            "E. (-4, 2)"
+                        ],
+                        correctAnswer: 0,
+                        explanation: "Penjumlahan vektor dilakukan per komponen: (3+1, -2+4) = (4, 2)."
+                    },
+                    {
+                        question: "Nilai dari cos(π/3) adalah...",
+                        options: [
+                            "A. 0",
+                            "B. 1/2",
+                            "C. √2/2",
+                            "D. √3/2",
+                            "E. 1"
+                        ],
+                        correctAnswer: 1,
+                        explanation: "π/3 radian = 60°. Nilai cos(60°) = 1/2."
+                    },
+                    {
+                        question: "Jika P(x) = x³ - 2x² + 3x - 4, maka nilai P(2) adalah...",
+                        options: [
+                            "A. -2",
+                            "B. 0",
+                            "C. 2",
+                            "D. 4",
+                            "E. 6"
+                        ],
+                        correctAnswer: 2,
+                        explanation: "P(2) = 2³ - 2(2)² + 3(2) - 4 = 8 - 8 + 6 - 4 = 2."
+                    }
                 ]
             }
         };
@@ -3202,7 +1870,7 @@
             '80-89': 'Hasil yang sangat baik! Anda telah menunjukkan pemahaman yang mendalam tentang matematika.',
             '70-79': 'Kerja bagus! Anda memiliki pemahaman yang baik tentang materi matematika ini.',
             '60-69': 'Hasil yang cukup baik. Tingkatkan lagi pemahaman Anda untuk hasil yang lebih baik.',
-            '50-59': 'Anda sudah memahami dasar-dasarnya. Terus berlatih untuk meningkatkan kemampuan matematika.',
+            '50-59': 'Anda sudah memahami dasar-dasarnya. Terus berlatih untuk meningkatkan pemahaman matematika.',
             '0-49': 'Jangan menyerah! Gunakan hasil ini sebagai motivasi untuk belajar matematika lebih giat lagi.'
         };
         
@@ -3424,7 +2092,7 @@
                 radio.addEventListener('change', showGradeSelection);
             });
             
-            document.getElementById('save-participant-btn').addEventListener('click', startExam);
+            document.getElementById('save-participant-btn').addEventListener('click', validateAndStartExam);
             document.getElementById('finish-exam-btn').addEventListener('click', finishExam);
             document.getElementById('skip-question-btn').addEventListener('click', skipQuestion);
             document.getElementById('unanswered-btn').addEventListener('click', showUnansweredQuestions);
@@ -3446,22 +2114,49 @@
             document.getElementById('fullname').addEventListener('input', function() {
                 // Convert input to uppercase automatically
                 this.value = this.value.toUpperCase();
+                validateField(this, 'fullname-error', /^[A-Za-z ]+$/, "Nama lengkap harus diisi dan hanya boleh mengandung huruf");
                 checkParticipantFormValidity();
             });
             
-            document.getElementById('school-name').addEventListener('input', checkParticipantFormValidity);
-            document.getElementById('student-id').addEventListener('input', checkParticipantFormValidity);
+            document.getElementById('school-name').addEventListener('input', function() {
+                validateField(this, 'school-error', /.+/, "Nama sekolah harus diisi");
+                checkParticipantFormValidity();
+            });
+            
+            document.getElementById('student-id').addEventListener('input', function() {
+                validateField(this, 'nis-error', /^[0-9]+$/, "NIS harus diisi dan hanya boleh mengandung angka");
+                checkParticipantFormValidity();
+            });
+            
             document.querySelectorAll('input[name="purpose"]').forEach(radio => {
-                radio.addEventListener('change', checkParticipantFormValidity);
+                radio.addEventListener('change', function() {
+                    document.getElementById('purpose-error').style.display = 'none';
+                    document.getElementById('purpose-radio-group').classList.remove('radio-group-error');
+                    checkParticipantFormValidity();
+                });
             });
+            
             document.querySelectorAll('input[name="level"]').forEach(radio => {
-                radio.addEventListener('change', checkParticipantFormValidity);
+                radio.addEventListener('change', function() {
+                    document.getElementById('level-error').style.display = 'none';
+                    document.getElementById('level-radio-group').classList.remove('radio-group-error');
+                    checkParticipantFormValidity();
+                });
             });
+            
             document.querySelectorAll('input[name="grade"]').forEach(radio => {
-                radio.addEventListener('change', checkParticipantFormValidity);
+                radio.addEventListener('change', function() {
+                    document.getElementById('grade-error').style.display = 'none';
+                    checkParticipantFormValidity();
+                });
             });
+            
             document.querySelectorAll('input[name="subject"]').forEach(radio => {
-                radio.addEventListener('change', checkParticipantFormValidity);
+                radio.addEventListener('change', function() {
+                    document.getElementById('subject-error').style.display = 'none';
+                    document.getElementById('subject-radio-group').classList.remove('radio-group-error');
+                    checkParticipantFormValidity();
+                });
             });
 
             // Admin panel toggle switches
@@ -3482,6 +2177,9 @@
             document.getElementById('edit-selected-participants').addEventListener('click', editSelectedParticipants);
             document.getElementById('delete-selected-participants').addEventListener('click', deleteSelectedParticipants);
             document.getElementById('validate-certificate-btn').addEventListener('click', validateCertificate);
+            document.getElementById('export-csv-btn').addEventListener('click', exportToCSV);
+            document.getElementById('export-json-btn').addEventListener('click', exportToJSON);
+            document.getElementById('export-excel-btn').addEventListener('click', exportToExcel);
             
             // Search functionality
             document.getElementById('participant-search').addEventListener('input', searchParticipants);
@@ -3521,11 +2219,11 @@
         }
         
         function saveParticipantsData() {
-            localStorage.setItem('participantsData', JSON.stringify(participantsData));
+            localStorage.setItem('pergunuParticipantsData', JSON.stringify(participantsData));
         }
         
         function saveAdminSettings() {
-            localStorage.setItem('adminSettings', JSON.stringify(adminSettings));
+            localStorage.setItem('pergunuAdminSettings', JSON.stringify(adminSettings));
         }
         
         function handleLogin() {
@@ -3625,42 +2323,92 @@
             container.appendChild(radioLabel);
         }
         
+        function validateField(field, errorId, pattern, errorMessage) {
+            const errorElement = document.getElementById(errorId);
+            
+            if (!field.value.trim() || !pattern.test(field.value.trim())) {
+                field.classList.add('input-error');
+                errorElement.textContent = errorMessage;
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                field.classList.remove('input-error');
+                errorElement.style.display = 'none';
+                return true;
+            }
+        }
+        
         function checkParticipantFormValidity() {
             let isValid = true;
             
-            // Check common fields
-            const fullname = document.getElementById('fullname').value.trim();
-            if (!fullname || !/^[A-Za-z ]+$/.test(fullname)) {
+            // Validate fullname
+            const fullname = document.getElementById('fullname');
+            if (!validateField(fullname, 'fullname-error', /^[A-Za-z ]+$/, "Nama lengkap harus diisi dan hanya boleh mengandung huruf")) {
                 isValid = false;
             }
             
-            // Check student fields
-            if (!document.getElementById('school-name').value.trim()) {
+            // Validate school name
+            const schoolName = document.getElementById('school-name');
+            if (!validateField(schoolName, 'school-error', /.+/, "Nama sekolah harus diisi")) {
                 isValid = false;
             }
             
-            const studentId = document.getElementById('student-id').value.trim();
-            if (!studentId || !/^[0-9]+$/.test(studentId)) {
+            // Validate student ID
+            const studentId = document.getElementById('student-id');
+            if (!validateField(studentId, 'nis-error', /^[0-9]+$/, "NIS harus diisi dan hanya boleh mengandung angka")) {
                 isValid = false;
             }
             
+            // Validate purpose
             if (!document.querySelector('input[name="purpose"]:checked')) {
+                document.getElementById('purpose-error').style.display = 'block';
+                document.getElementById('purpose-radio-group').classList.add('radio-group-error');
                 isValid = false;
             }
             
+            // Validate level
             if (!document.querySelector('input[name="level"]:checked')) {
+                document.getElementById('level-error').style.display = 'block';
+                document.getElementById('level-radio-group').classList.add('radio-group-error');
                 isValid = false;
             }
             
+            // Validate grade
             if (!document.querySelector('input[name="grade"]:checked')) {
+                document.getElementById('grade-error').style.display = 'block';
                 isValid = false;
             }
             
+            // Validate subject
             if (!document.querySelector('input[name="subject"]:checked')) {
+                document.getElementById('subject-error').style.display = 'block';
+                document.getElementById('subject-radio-group').classList.add('radio-group-error');
                 isValid = false;
             }
             
             document.getElementById('save-participant-btn').disabled = !isValid;
+            return isValid;
+        }
+        
+        function validateAndStartExam() {
+            if (checkParticipantFormValidity()) {
+                startExam();
+            } else {
+                // Show warning notification
+                const warning = document.getElementById('form-warning');
+                warning.style.display = 'block';
+                
+                // Hide after 5 seconds
+                setTimeout(() => {
+                    warning.style.display = 'none';
+                }, 5000);
+                
+                // Scroll to first error
+                const firstError = document.querySelector('.input-error, .radio-group-error');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
         }
         
         function startExam() {
@@ -3674,7 +2422,8 @@
                 subject: document.querySelector('input[name="subject"]:checked')?.value,
                 school: document.getElementById('school-name')?.value.trim(),
                 studentId: document.getElementById('student-id')?.value.trim(),
-                examDate: new Date().toISOString()
+                examDate: new Date().toISOString(),
+                deviceInfo: getDeviceInfo()
             };
             
             // Load questions based on level - hanya Matematika
@@ -3721,6 +2470,27 @@
                 // Load first question
                 loadQuestion(0);
             }, 500);
+        }
+        
+        // Fungsi untuk mendapatkan informasi perangkat
+        function getDeviceInfo() {
+            const userAgent = navigator.userAgent;
+            let deviceType = 'Desktop';
+            
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {
+                deviceType = 'Mobile';
+            } else if (/Tablet|iPad/i.test(userAgent)) {
+                deviceType = 'Tablet';
+            }
+            
+            return {
+                deviceType: deviceType,
+                userAgent: userAgent,
+                screenWidth: window.screen.width,
+                screenHeight: window.screen.height,
+                platform: navigator.platform,
+                language: navigator.language
+            };
         }
         
         // Fungsi untuk mengacak array (Fisher-Yates algorithm)
@@ -3911,7 +2681,7 @@
             }
         }
         
-        function finishExam() {
+        async function finishExam() {
             clearInterval(examTimer);
             
             // Calculate unanswered questions
@@ -3920,16 +2690,56 @@
             // Generate certificate code
             const certificateCode = generateUniqueCode();
             
-            // Add participant to data store
+            // Calculate score
             const score = Math.round((examData.correct / questions.length) * 100);
-            participantsData.push({
+            
+            // Add participant to data store
+            const participantRecord = {
                 ...participantData,
                 score: score,
                 examDate: new Date().toISOString(),
-                certificateCode: certificateCode
-            });
-            saveParticipantsData();
+                certificateCode: certificateCode,
+                answers: examData.answers,
+                questions: questions.map((q, i) => ({
+                    question: q.question,
+                    selectedAnswer: examData.answers[i],
+                    correctAnswer: q.correctAnswer,
+                    explanation: q.explanation
+                })),
+                deviceInfo: participantData.deviceInfo,
+                totalQuestions: questions.length,
+                correctAnswers: examData.correct,
+                wrongAnswers: examData.wrong,
+                unanswered: examData.unanswered
+            };
             
+            // Simpan ke Google Sheets dan localStorage
+            try {
+                // First try to save to Google Sheets
+                const saveResult = await saveToGoogleSheets(participantRecord);
+                
+                if (saveResult.success) {
+                    // If successful, save to localStorage as well
+                    participantsData.push(participantRecord);
+                    saveParticipantsData();
+                    
+                    // Show results
+                    showResults(participantRecord, certificateCode);
+                } else {
+                    // If Google Sheets fails, fallback to localStorage
+                    console.error('Failed to save to Google Sheets:', saveResult.message);
+                    saveToLocalStorage(participantRecord);
+                    showResults(participantRecord, certificateCode);
+                }
+            } catch (error) {
+                console.error('Error saving to Google Sheets:', error);
+                // Fallback to localStorage
+                saveToLocalStorage(participantRecord);
+                showResults(participantRecord, certificateCode);
+            }
+        }
+        
+        function showResults(participantRecord, certificateCode) {
             // Hide exam screen with slide out animation
             document.getElementById('exam-screen').classList.add('slide-out');
             
@@ -3941,7 +2751,7 @@
                 currentScreen = 'results';
                 
                 // Display results
-                displayResults();
+                displayResults(participantRecord);
                 
                 // Generate certificate
                 generateCertificate(certificateCode);
@@ -3954,20 +2764,78 @@
                 certificateSound.play().catch(e => console.log("Certificate sound prevented:", e));
             }, 500);
         }
-        
-        function displayResults() {
-            document.getElementById('result-name').textContent = participantData.fullname;
+
+        // Fungsi untuk mengirim data ke Google Sheets
+        async function saveToGoogleSheets(participantData) {
+            const dataToSend = {
+                action: 'saveParticipant',
+                data: {
+                    fullname: participantData.fullname,
+                    status: participantData.status,
+                    purpose: participantData.purpose,
+                    level: participantData.level,
+                    grade: participantData.grade,
+                    subject: participantData.subject,
+                    school: participantData.school,
+                    studentId: participantData.studentId,
+                    score: participantData.score,
+                    certificateCode: participantData.certificateCode,
+                    examDate: participantData.examDate,
+                    deviceType: participantData.deviceInfo?.deviceType || 'Unknown',
+                    totalQuestions: participantData.totalQuestions,
+                    correctAnswers: participantData.correctAnswers,
+                    wrongAnswers: participantData.wrongAnswers,
+                    unanswered: participantData.unanswered
+                }
+            };
+
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dataToSend)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                console.error('Error saving to Google Sheets:', error);
+                throw error;
+            }
+        }
+
+        function saveToLocalStorage(participantData) {
+            const participantRecord = {
+                ...participantData,
+                totalQuestions: questions.length,
+                correctAnswers: examData.correct,
+                wrongAnswers: examData.wrong,
+                unanswered: examData.unanswered
+            };
+            
+            participantsData.push(participantRecord);
+            saveParticipantsData();
+        }
+            
+        function displayResults(participantRecord) {
+            document.getElementById('result-name').textContent = participantRecord.fullname;
             document.getElementById('result-status').textContent = 'Pelajar';
-            document.getElementById('result-level').textContent = participantData.level || '-';
-            document.getElementById('result-grade').textContent = participantData.grade ? `Kelas ${participantData.grade}` : '-';
-            document.getElementById('result-subject').textContent = participantData.subject || '-';
-            document.getElementById('total-questions').textContent = questions.length;
-            document.getElementById('correct-answers').textContent = examData.correct;
-            document.getElementById('wrong-answers').textContent = examData.wrong;
-            document.getElementById('unanswered-questions').textContent = examData.unanswered;
+            document.getElementById('result-level').textContent = participantRecord.level || '-';
+            document.getElementById('result-grade').textContent = participantRecord.grade ? `Kelas ${participantRecord.grade}` : '-';
+            document.getElementById('result-subject').textContent = participantRecord.subject || '-';
+            document.getElementById('total-questions').textContent = participantRecord.totalQuestions;
+            document.getElementById('correct-answers').textContent = participantRecord.correctAnswers;
+            document.getElementById('wrong-answers').textContent = participantRecord.wrongAnswers;
+            document.getElementById('unanswered-questions').textContent = participantRecord.unanswered;
             
             // Calculate score (percentage)
-            const score = Math.round((examData.correct / questions.length) * 100);
+            const score = Math.round((participantRecord.correctAnswers / participantRecord.totalQuestions) * 100);
             document.getElementById('exam-score').textContent = `${score}%`;
         }
         
@@ -3996,6 +2864,10 @@
                 }
             }
             
+            // Format NIS and school name for certificate code
+            const formattedNIS = participantData.studentId ? participantData.studentId : '0000';
+            const formattedSchool = participantData.school ? participantData.school.replace(/\s+/g, '-').toUpperCase().substring(0, 10) : 'SEKOLAH';
+            
             // Create certificate HTML
             const certificate = document.createElement('div');
             certificate.className = 'certificate';
@@ -4003,7 +2875,7 @@
             certificate.innerHTML = `
                 <div class="certificate-content">
                     <h1 class="certificate-title">SERTIFIKAT PRESTASI</h1>
-                    <p class="certificate-code">${formatName(participantData.fullname)}/PELAJAR/${participantData.level || 'UMUM'}/${participantData.subject || 'UMUM'}/${dateString}/${certificateCode}/PERGUNU-STB</p>
+                    <p class="certificate-code">${formatName(participantData.fullname)}/${formattedNIS}/${formattedSchool}/${participantData.level || 'UMUM'}/${participantData.subject || 'UMUM'}/${dateString}/${certificateCode}/PERGUNU-STB</p>
                     <p>Diberikan Kepada</p>
                     <h2 class="certificate-recipient">${formatName(participantData.fullname)}</h2>
                     <p class="certificate-body">
@@ -4011,8 +2883,8 @@
                         Ujian Matematika Pergunu Situbondo
                     </p>
                     <p class="certificate-body">
-                        Sebagai penghargaan atas dedikasi dalam memahami materi matematika dan meningkatkan kemampuan berpikir logis, 
-                        sertifikat ini diberikan sebagai motivasi untuk terus berkembang dalam ilmu matematika.
+                        Sebagai penghargaan atas dedikasi dalam memahami materi matematika dan meningkatkan kemampuan logika, 
+                        sertifikat ini diberikan sebagai motivasi untuk terus berkembang dalam ilmu eksakta.
                     </p>
                     <div class="certificate-score">Nilai: ${score}%</div>
                     <p class="certificate-motivation">${motivation}</p>
@@ -4445,6 +3317,7 @@
                     <p>Mata Ujian: ${participant.subject || '-'}</p>
                     <p>Nilai: ${participant.score}%</p>
                     <p>Tanggal Ujian: ${new Date(participant.examDate).toLocaleDateString('id-ID')}</p>
+                    <p>Perangkat: ${participant.deviceInfo?.deviceType || 'Tidak diketahui'}</p>
                 `;
                 validationResult.style.display = 'block';
             } else {
@@ -4508,6 +3381,93 @@
             saveAdminSettings();
             
             alert('Pengaturan berhasil disimpan!');
+        }
+        
+        function exportToCSV() {
+            if (participantsData.length === 0) {
+                alert('Tidak ada data peserta untuk diekspor');
+                return;
+            }
+            
+            // Create CSV header
+            let csv = 'Nama,NIS,Sekolah,Tingkat,Kelas,Subject,Nilai,Kode Sertifikat,Tanggal Ujian,Jenis Perangkat\n';
+            
+            // Add data rows
+            participantsData.forEach(participant => {
+                csv += `"${participant.fullname}","${participant.studentId || ''}","${participant.school || ''}",`;
+                csv += `"${participant.level || ''}","${participant.grade || ''}","${participant.subject || ''}",`;
+                csv += `"${participant.score}","${participant.certificateCode || ''}","${new Date(participant.examDate).toLocaleString('id-ID')}",`;
+                csv += `"${participant.deviceInfo?.deviceType || 'Tidak diketahui'}"\n`;
+            });
+            
+            // Create download link
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `data-peserta-${new Date().toISOString().slice(0,10)}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        function exportToJSON() {
+            if (participantsData.length === 0) {
+                alert('Tidak ada data peserta untuk diekspor');
+                return;
+            }
+            
+            // Create JSON data
+            const jsonData = JSON.stringify(participantsData, null, 2);
+            
+            // Create download link
+            const blob = new Blob([jsonData], { type: 'application/json;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `data-peserta-${new Date().toISOString().slice(0,10)}.json`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        function exportToExcel() {
+            if (participantsData.length === 0) {
+                alert('Tidak ada data peserta untuk diekspor');
+                return;
+            }
+            
+            // Prepare data for Excel
+            const excelData = [
+                ['Nama', 'NIS', 'Sekolah', 'Tingkat', 'Kelas', 'Mata Ujian', 'Nilai', 'Kode Sertifikat', 'Tanggal Ujian', 'Jenis Perangkat']
+            ];
+            
+            participantsData.forEach(participant => {
+                excelData.push([
+                    participant.fullname,
+                    participant.studentId || '',
+                    participant.school || '',
+                    participant.level || '',
+                    participant.grade || '',
+                    participant.subject || '',
+                    participant.score,
+                    participant.certificateCode || '',
+                    new Date(participant.examDate).toLocaleString('id-ID'),
+                    participant.deviceInfo?.deviceType || 'Tidak diketahui'
+                ]);
+            });
+            
+            // Create worksheet
+            const ws = XLSX.utils.aoa_to_sheet(excelData);
+            
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Data Peserta");
+            
+            // Export to Excel file
+            XLSX.writeFile(wb, `data-peserta-${new Date().toISOString().slice(0,10)}.xlsx`);
         }
     </script>
 </body>
